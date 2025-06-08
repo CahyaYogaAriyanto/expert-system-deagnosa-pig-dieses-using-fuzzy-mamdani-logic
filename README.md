@@ -1,0 +1,1 @@
+# expert-system-deagnosa-pig-dieses-using-fuzzy-mamdani-logic
