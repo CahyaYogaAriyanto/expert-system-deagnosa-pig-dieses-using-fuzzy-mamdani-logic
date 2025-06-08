@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tentang Sistem Diagnosa Penyakit Babi</title>
+  <link rel="stylesheet" href="../static/css/about.css">
+</head>
+{% include "navbar.html" %}
+<body>
+  <section class="about-section">
+    <h2>Tentang Sistem Diagnosa Penyakit Babi</h2>
+    <p>
+      Website ini merupakan sistem pakar berbasis web yang bertujuan untuk membantu peternak dan tenaga medis hewan dalam 
+      <span class="highlight">mendeteksi penyakit babi secara cepat dan akurat</span>. Sistem ini memanfaatkan metode 
+      <span class="highlight">logika fuzzy Mamdani</span> untuk menganalisis gejala dan memberikan kemungkinan penyakit yang dialami babi.
+    </p>
+
+    <h3 class="section-title">Latar Belakang</h3>
+    <p>
+      Banyak peternak babi di Indonesia masih kesulitan dalam mendeteksi penyakit secara dini. Hal ini menyebabkan penanganan lambat dan berdampak pada produktivitas serta tingkat kematian ternak. Oleh karena itu, dibutuhkan sistem yang mampu memberikan diagnosa awal yang dapat diandalkan.
+    </p>
+
+    <h3 class="section-title">Tujuan Pengembangan</h3>
+    <p>
+      Sistem ini dikembangkan untuk menjadi alat bantu diagnosa awal bagi peternak dan tenaga kesehatan hewan, 
+      sekaligus menjadi media edukatif dalam mengenal gejala penyakit babi yang umum terjadi.
+    </p>
+
+    <h3 class="section-title">Fitur Utama</h3>
+    <div class="card-container">
+      <div class="card">
+        <h3>Diagnosa Fuzzy</h3>
+        <p>Menerapkan logika fuzzy Mamdani untuk hasil diagnosa yang lebih fleksibel dan mendekati kondisi nyata.</p>
+      </div>
+      <div class="card">
+        <h3>Input Gejala Interaktif</h3>
+        <p>Pengguna dapat memilih gejala yang dialami babi secara mudah melalui form interaktif.</p>
+      </div>
+      <div class="card">
+        <h3>Rekomendasi Solusi</h3>
+        <p>Memberikan saran tindakan awal atau pengobatan berdasarkan hasil diagnosa.</p>
+      </div>
+    </div>
+
+    <h3 class="section-title">Manfaat Sistem</h3>
+    <p>
+      Sistem ini bermanfaat dalam <span class="highlight">meningkatkan efisiensi deteksi penyakit</span>, 
+      mengurangi ketergantungan pada pemeriksaan manual, serta mendukung peningkatan kualitas peternakan babi di Indonesia.
+    </p>
+
+    <h3 class="section-title">Pengembang Sistem</h3>
+    <div class="team-container">
+      <div class="team-member">
+        <img src="../static/img/gebi.jpg" >
+        <h4>Gebriella Wahyuni Sirait </h4>
+        <p>Pengembang Sistem</p>
+      </div>
+    </div>
+  </section>
+  {% include "footer.html" %}
+
+</body>
+</html>

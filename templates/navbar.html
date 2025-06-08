@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link rel="stylesheet" href="../static/css/navbar.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <img class="logo-pi" src="../static/img/logo-babi.png" alt="Logo" />
+      <div class="brand">
+        <strong class="text-a">PIG FRIEND</strong>
+      </div>
+    </div>
+
+    <div class="navbar-toggle" id="navbar-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+    <ul class="navbar-menu" id="navbar-menu">
+      <li><a href="/" class="{% if request.path == '/' %}active-clicked{% endif %}">Home</a></li>
+      <li><a href="/about" class="{% if request.path == '/about' %}active-clicked{% endif %}">About</a></li>
+      <li><a href="">Tanya Pakar</a></li>
+      <li class="last-menu"><a href="/login" class="{% if request.path == '/login' %}active-clicked{% endif %}">Login Admin</a></li>
+    </ul>
+  </nav>
+
+  <script>
+    window.addEventListener('scroll', function () {
+  const navbar = document.querySelector('.navbar');
+  const text = document.querySelector('.navbar-logo .brand strong');
+  const navbarMenu = document.querySelector('.navbar-menu');
+
+  if (window.scrollY > 0) {
+    navbar?.classList.add('scrolled');
+    text?.classList.add('scrolled');
+    navbarMenu?.classList.add('scrolled');
+  } else {
+    navbar?.classList.remove('scrolled');
+    text?.classList.remove('scrolled');
+    navbarMenu?.classList.remove('scrolled');
+  }
+});
+
+
+    const toggle = document.getElementById('navbar-toggle');
+    const menu = document.getElementById('navbar-menu');
+    const menuItems = document.querySelectorAll('.navbar-menu li');
+  
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('show');
+    });
+    menuItems.forEach(item => {
+  item.addEventListener('click', (e) => {
+    const clickedLink = e.currentTarget.querySelector('a').getAttribute('href');
+    localStorage.setItem('activeMenu', clickedLink);
+  });
+});
+  </script>  
+</body>
+</html>

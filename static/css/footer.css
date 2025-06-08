@@ -1,0 +1,74 @@
+.footer {
+  margin-top: 100px;
+  background-color: #1a1a2e;
+  background-image: url(../bg.jpg);
+  background-size: cover; 
+  background-position: center; 
+  color: white;
+  padding: 40px 20px;
+}
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .footer-section {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .footer-section h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .footer-section p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    margin: 10px 0;
+  }
+  
+  .footer-section ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+  }
+  
+  .footer-section ul li a:hover {
+    color: #f4a261; /* Oranye saat hover */
+  }
+  
+  .social-icons a {
+    text-decoration: none;
+    color: white;
+    margin-right: 10px;
+  }
+  
+  .social-icons a:hover {
+    color: #f4a261;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .footer-bottom p {
+    font-size: 0.9rem;
+  }
+  .deskrib{
+    text-align: justify;
+  }
+  

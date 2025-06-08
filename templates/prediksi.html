@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    {% include "head.html" %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/prediksi.css">
+</head>
+    <body>
+        <div class="container">
+            <h2>Form Deteksi Penyakit Babi</h2>
+            <form method="post" action="{{ url_for('hasil') }}" onsubmit="return validateForm()">
+                {% for rule in rules %}
+                    <div class="form-check">
+                        <input type="checkbox" name="symptoms" value="{{ rule.kode_gejala }}" id="{{ rule.kode_gejala }}">
+                        <label class="form-check-label" for="{{ rule.kode_gejala }}">
+                            {{ loop.index }}. {{ rule.nama }} <i>?</i>
+                        </label>
+                    </div>
+                {% endfor %}
+                <div class="form-floating-custom">
+                    <i class="bi bi-person input-icon"></i>
+                    <input type="text" class="form-control" id="nama" name="nama" placeholder=" " required autocomplete="off">
+                    <label for="nama">Masukkan Nama Anda</label>
+                </div>
+                <button type="submit" class="submit-btn">Diagnosa</button>
+            </form>
+        </div>
+        <script>
+            function validateForm() {
+                const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
+                if (checkboxes.length === 0) {
+                    alert("Silakan pilih minimal satu gejala sebelum melanjutkan diagnosis.");
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    </body>
+</html>

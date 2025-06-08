@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Navbar Slide dari Kanan</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/css/sidebar.css">
+</head>
+<body>
+
+  <!-- Top Navbar untuk Mobile -->
+  <div class="top-navbar">
+    Dashboard Admin
+    <div class="navbar-toggle" id="navbar-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-logo">
+      {% if foto_admin %}
+        <img src="{{ foto_admin }}" alt="Foto Admin">
+      {% else %}
+        <img class="logo-pi" src="../static/img/babi-1.jpg" alt="Foto Default">
+      {% endif %}
+
+      <div class="brand">
+        {% if nama_admin %}
+          <strong class="text-a">{{ nama_admin }}</strong>
+        {% else %}
+          <strong class="text-a">o admin</strong>
+        {% endif %}
+      </div>
+      <p>admin</p>
+    </div>
+
+    <ul class="navbar-menu">
+      <li><a href="{{ url_for('admin') }}" class="{% if request.path == '/admin' %}active{% endif %}">Tambah Akun Admin</a></li>
+      <li><a href="{{ url_for('akun_admin') }}" class="{% if request.path == '/akun_admin' %}active{% endif %}">Liat Akun Admin</a></li>
+      <li><a href="{{ url_for('data_gejala') }}" class="{% if request.path == '/data_gejala' %}active{% endif %}">Data Gejala</a></li>
+      <li><a href="{{ url_for('data_penyakit') }}" class="{% if request.path == '/data_penyakit' %}active{% endif %}">Data Penyakit</a></li>
+      <li><a href="{{ url_for('riwayat_diagnosa') }}" class="{% if request.path == '/riwayat_diagnosa' %}active{% endif %}">Riwayat Diagnosa</a></li>
+    </ul>
+    <div class="logout-section" style="width: 100%; margin-top: auto;">
+    <ul class="navbar-menu">
+       <form action="{{ url_for('logout') }}" method="post" style="margin: 0;">
+        <button type="submit" style="width: 100%; background-color: #e53935; border: none; color: white; padding: 10px 15px; border-radius: 4px; font-weight: 600;">
+          Logout
+        </button>
+      </form>
+    </ul>
+  </div>
+  </nav>
+   
+  <script>
+    const toggle = document.getElementById('navbar-toggle');
+    const navbar = document.getElementById('navbar');
+
+    toggle.addEventListener('click', () => {
+      navbar.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navbar.contains(e.target) && !toggle.contains(e.target)) {
+        navbar.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

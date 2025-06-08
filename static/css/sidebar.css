@@ -1,0 +1,147 @@
+body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Top Navbar hanya untuk mobile */
+    .top-navbar {
+      display: none;
+      background-color: #004d40;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      background-color: #004d40;
+      color: white;
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      flex-direction: column;
+      justify-content: start;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      height: 100vh;
+    }
+
+    .navbar-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+
+    .navbar-logo img {
+      border-radius: 20px;
+      margin-top: 20px;
+      height: 120px;
+      width: 100px;
+    }
+
+    .navbar-logo p {
+      font-size: 15px;
+      color: rgb(4, 252, 70);
+    }
+
+    .navbar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    .navbar-menu li {
+      margin-bottom: 15px;
+    }
+
+    .navbar-menu li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      display: block;
+      padding: 10px 15px;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+    }
+
+    .navbar-menu li a:hover,
+    .navbar-menu li a.active {
+      background-color: #00695c;
+    }
+
+    .logo-pi {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .brand strong {
+      font-size: 1.2rem;
+      user-select: none;
+    }
+
+    .navbar-toggle {
+      display: none;
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      font-size: 1.8rem;
+      color: rgb(255, 254, 254);
+      cursor: pointer;
+      z-index: 1100;
+      user-select: none;
+    }
+    .logout-section a {
+      color: white;
+      font-weight: bold;
+    }
+
+    .logout-section a:hover {
+      background-color: #c62828;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 767px) {
+      .top-navbar {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background-color: #004d40;
+        color: white;
+        text-align: left;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: auto;
+        right: -250px;
+        width: 250px;
+        height: 100vh;
+        background-color: #004d40;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: right 0.3s ease-in-out;
+      }
+
+      .navbar.show {
+        right: 0;
+      }
+
+      .navbar-toggle {
+        display: block;
+      }
+    }

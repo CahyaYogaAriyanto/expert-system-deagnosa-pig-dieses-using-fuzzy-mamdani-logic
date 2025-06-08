@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    {% include "head.html" %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/hasil.css">
+    <style>
+        .alert-danger {
+            display: none; 
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hasil Diagnosa</h2>
+        <div class="result-section">
+
+            <!-- ALERT BAHAYA -->
+            <div id="alert" class="alert-danger">
+                ⚠️ Peringatan: Penyakit yang terdeteksi berpotensi berbahaya!
+            </div>
+
+            <p><strong>Penyakit:</strong> {{ hasil.nama }} </p>
+            <p><strong>Definisi:</strong>  {{ hasil.definisi }}</p>
+            <p><strong>Rekomendasi Penanganan:</strong></p>
+            <ul>
+                {% for line in hasil.rekomendasi.split('\n') %}
+                    <li>{{ line }}</li>
+                {% endfor %}
+            </ul>
+            <div class="tombol">
+                <a href="/prediksi" class="back">Kembali</a>
+                <a href="/" class="back-menu">Menu Home</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const penyakit = "{{ hasil.nama|lower }}"; 
+            if (penyakit === "african swine fever atau demam babi afrika" || penyakit === "hog cholera") {
+                const alertDiv = document.getElementById("alert");
+                alertDiv.style.display = "block";
+                setTimeout(() => {
+                    alertDiv.style.display = "none";
+                }, 10000); 
+            }
+        });
+    </script>
+</body>
+</html>

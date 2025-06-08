@@ -1,0 +1,84 @@
+/* Container utama */
+.sidebar-container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #343a40;
+  min-height: 100vh;
+  padding-top: 20px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin: 0;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar-nav a:hover {
+  background-color: #495057;
+}
+
+/* Navbar khusus mobile */
+.navbar-mobile {
+  display: none;
+  width: 100%;
+  background-color: #343a40;
+  color: white;
+  padding: 10px 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hamburger {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.brand-logo {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+  .sidebar-container {
+    flex-direction: column;
+  }
+
+  .navbar-mobile {
+    display: flex;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 1000;
+    width: 220px;
+    height: 100vh;
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+}

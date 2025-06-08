@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include "head.html" %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../static/css/home.css">
+</head>
+{% include "navbar.html" %}
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>SELAMAT DATANG SISTEM DI PAKAR DIAGNOSA PENYAKIT BABI</h1>
+            <p>
+                Dengan pengembangan aplikasi sistem pakar berbasis web untuk diagnosa dini penyakit hewan ternak babi menggunakan metode fuzzy Mamdani, 
+                peternak dapat dengan mudah mengakses informasi dan diagnosis penyakit melalui perangkat mereka. 
+                Sistem ini diharapkan dapat meningkatkan kesadaran dan pengetahuan peternak mengenai kesehatan ternak serta 
+                mengurangi angka kematian dan kerugian akibat penyakit.
+            </p>
+            <a href="/prediksi" class="button">Diagnosa Sekarang</a>
+        </div>
+        <div class="image">
+            <img src="../static/img/doktor.png" alt="dokter dan babi">
+        </div>
+    </div>
+
+    <!-- Bagian infografis -->
+    <div class="infografis-container">
+    <h2>Tiga Langkah Utama Menjaga Kesehatan Babi</h2>
+
+    <div class="step">
+      <div class="icon"><i class="fas fa-broom"></i></div>
+      <div class="step-text">
+        <h3>1. Kebersihan & Sanitasi Kandang</h3>
+        <p>Bersihkan kandang 2x sehari dan semprot desinfektan 3x seminggu. Lingkungan bersih mencegah penyakit dan menjaga ternak tetap nyaman.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="icon"><i class="fas fa-seedling"></i></div>
+      <div class="step-text">
+        <h3>2. Pakan Seimbang & Multivitamin</h3>
+        <p>Berikan pakan kaya protein (16–18%), serat, lemak, dan air. Gunakan bahan berkualitas seperti bungkil kedelai dan tepung ikan untuk pertumbuhan maksimal.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="icon"><i class="fas fa-syringe"></i></div>
+      <div class="step-text">
+        <h3>3. Vaksinasi & Pengobatan</h3>
+        <p>Lindungi ternak sejak dini. Vaksinasi rutin memperkuat sistem imun dan mencegah penyakit menular yang merugikan.</p>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <i class="fas fa-bullseye"></i>
+      <div>
+        Peternakan Sehat, Hasil Meningkat!
+        <small>Mulai praktik terbaik hari ini untuk masa depan ternak yang lebih baik.</small>
+      </div>
+    </div>
+  </div>
+
+    <!-- Bagian Blog -->
+    <div class="blog-container">
+        <h2 class="blog-title">Artikel Terbaru</h2>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <img src="../static/img/k-babi.jpeg" alt="Blog 1">
+                <div class="blog-content">
+                    <h4>Cara Efektif Membersihkan Kandang Babi</h4>
+                    <p>Tips menjaga kebersihan kandang agar ternak tetap sehat dan terhindar dari penyakit.</p>
+                    <a href="#">Baca Selengkapnya</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <img src="../static/img/pakan.jpg" alt="Blog 2">
+                <div class="blog-content">
+                    <h4>Memilih Pakan Berkualitas untuk Ternak</h4>
+                    <p>Panduan memilih bahan pakan yang bergizi tinggi untuk pertumbuhan optimal.</p>
+                    <a href="#">Baca Selengkapnya</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <img src="../static/img/babi-1.jpg" alt="Blog 3">
+                <div class="blog-content">
+                    <h4>Pentingnya Vaksinasi pada Peternakan Babi</h4>
+                    <p>Manfaat vaksinasi rutin dalam mencegah penyakit menular pada ternak babi.</p>
+                    <a href="#">Baca Selengkapnya</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <img src="../static/img/manajemen-b.png" alt="Blog 4">
+                <div class="blog-content">
+                    <h4>Manajemen Pemeliharaan anak Babi</h4>
+                    <p>Cara mudah mengenali gejala awal penyakit agar bisa ditangani lebih cepat.</p>
+                    <a href="https://rumahternak.com/2021/09/26/manajemen-pemeliharaan-anak-babi/">Baca Selengkapnya</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% include "footer.html" %}
+</html>

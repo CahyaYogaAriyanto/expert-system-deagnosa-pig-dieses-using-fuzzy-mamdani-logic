@@ -1,0 +1,50 @@
+[ 
+    {
+        "kode_penyakit": "P1",
+        "nama_penyakit": "Anemia",
+        "definisi": "Kondisi kekurangan sel darah merah atau hemoglobin pada babi yang menyebabkan lemas, pucat, dan pertumbuhan terhambat.",
+        "rekomendasi_penanganan": "\u2022 Berikan suntikan zat besi untuk meningkatkan produksi sel darah merah.\n\u2022 Tambahkan suplemen vitamin, terutama vitamin B-kompleks, dalam pakan.\n\u2022 Gunakan pakan khusus babi yang mengandung zat besi dan gizi seimbang.\n\u2022 Sediakan air minum bersih dan cukup setiap hari.\n\u2022 Kurangi jumlah babi dalam satu kandang agar tidak saling berebut makanan dan mengakitbatkan babi stress."
+    },
+    {
+        "kode_penyakit": "P2",
+        "nama_penyakit": "Diare",
+        "definisi": "Gangguan pencernaan yang ditandai dengan tinja cair berlebihan, sering disebabkan infeksi, pakan tidak cocok, atau stres.",
+        "rekomendasi_penanganan": "\u2022 Berikan larutan elektrolit untuk mengganti cairan tubuh yang hilang(tersedia di toko hewan).\n\u2022 Berikan obat diare sesuai petunjuk dokter hewan.\n\u2022 Ganti pakan yang menyebabkan iritasi atau tidak cocok.\n\u2022 Jaga kebersihan tempat makan, minum, dan seluruh area kandang.\n\u2022 Pisahkan babi yang diare agar tidak menular ke yang lain."
+    },
+    {
+        "kode_penyakit": "P3",
+        "nama_penyakit": "Helminitis atau Cacingan",
+        "definisi": "Infeksi cacing parasit pada sistem pencernaan babi.",
+        "rekomendasi_penanganan": "\u2022 Berikan obat cacing seperti Levamisole, Albendazole, atau Ivermectin secara berkala.\n\u2022 Bersihkan kandang setiap hari dan buang kotoran di tempat yang aman.\n\u2022 Pastikan pakan dalam kondisi bersih dan tidak lembap atau berjamur.\n\u2022 Ganti air minum setiap hari agar tetap bersih.\n\u2022 Karantina babi yang baru datang sebelum digabung dengan babi lain."
+    },
+    {
+        "kode_penyakit": "P4",
+        "nama_penyakit": "Scabies",
+        "definisi": "Infeksi cacing parasit pada sistem pencernaan babi.",
+        "rekomendasi_penanganan": "\u2022 Bersihkan luka dengan Betadine atau Iodine untuk mencegah infeksi sekunder.\n\u2022 Mandikan babi secara berkala dengan sabun antiseptik.\n\u2022 Pisahkan babi yang terkena dari yang sehat.\n\u2022 Semprot kandang dengan cairan desinfektan secara rutin.\n\u2022 Jaga alas kandang agar tetap kering dan bersih."
+    },
+    {
+        "kode_penyakit": "P5",
+        "nama_penyakit": "Cacar (Swine Pox)",
+        "definisi": "Infeksi virus yang menimbulkan lesi pada kulit babi, biasanya ringan dan menyebar melalui kontak langsung atau vektor.",
+        "rekomendasi_penanganan": "\u2022 Pisahkan babi yang sakit dari kelompok yang sehat.\n\u2022 Bersihkan luka menggunakan cairan antiseptik untuk mencegah infeksi sekunder.\n\u2022 Semprot kandang dengan cairan desinfektan secara rutin.\n\u2022 Gunakan kelambu atau semprotan untuk mengusir lalat dan nyamuk.\n\u2022 Jaga suhu kandang agar tetap hangat dan nyaman bagi babi."
+    },
+    {
+        "kode_penyakit": "P6",
+        "nama_penyakit": "Penyakit Mulut dan Kuku",
+        "definisi": "Penyakit virus sangat menular yang menyebabkan lepuh di mulut, lidah, dan kaki babi.",
+        "rekomendasi_penanganan": "\u2022 Isolasi babi yang menunjukkan luka pada mulut dan kaki.\n\u2022 Bersihkan luka dengan larutan antiseptik yang aman.\n\u2022 Berikan obat penurun demam dan antibiotik sesuai anjuran dokter hewan.\n\u2022 Semprot kandang dan area sekitar dengan cairan desinfektan secara rutin.\n\u2022 Batasi akses keluar masuk ke peternakan untuk sementara waktu."
+    },
+    {
+        "kode_penyakit": "P7",
+        "nama_penyakit": "Hog Cholera",
+        "definisi": "Penyakit virus akut yang menyerang sistem peredaran darah babi.",
+        "rekomendasi_penanganan": "\u2022 Lakukan vaksinasi pencegahan secara rutin sesuai jadwal.\n\u2022 Pisahkan dan musnahkan babi yang positif terinfeksi.\n\u2022 Semprot kandang dan peralatan dengan cairan desinfektan.\n\u2022 Karantina babi baru sebelum dicampur dengan kelompok yang sudah ada.\n\u2022 Gunakan pakan bergizi dan air minum yang bersih."
+    },
+    {
+        "kode_penyakit": "P8",
+        "nama_penyakit": "African Swine Fever atau Demam Babi Afrika",
+        "definisi": "Penyakit virus mematikan pada babi.",
+        "rekomendasi_penanganan": "\u2022 Segera pisahkan babi yang sakit dan laporkan ke petugas kesehatan hewan.\n\u2022 Semprot kandang, peralatan, dan kendaraan dengan cairan desinfektan.\n\u2022 Tutup peternakan sementara dari kunjungan luar.\n\u2022 Karantina babi yang baru datang selama 14 hari.\n\u2022 Hindari pemberian makanan sisa dari manusia yang belum dimasak."
+    }
+]

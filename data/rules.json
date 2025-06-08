@@ -1,0 +1,344 @@
+[
+    {
+        "kode_gejala": "G01",
+        "nama": "Pertumbuhan sangat lambat",
+        "kode_penyakit": [
+            "P1",
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G02",
+        "nama": "Nafsu makan babi menurun",
+        "kode_penyakit": [
+            "P1",
+            "P2",
+            "P3",
+            "P5",
+            "P7",
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G03",
+        "nama": "Apakah kulit babi tampak pucat",
+        "kode_penyakit": [
+            "P1"
+        ]
+    },
+    {
+        "kode_gejala": "G04",
+        "nama": "Apakah babi tampak lemas, lesu, atau tidak aktif",
+        "kode_penyakit": [
+            "P1",
+            "P5",
+            "P7",
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G05",
+        "nama": "Apakah selaput lendir (gusi, mata, telinga) babi tampak pucat",
+        "kode_penyakit": [
+            "P1"
+        ]
+    },
+    {
+        "kode_gejala": "G06",
+        "nama": "Apakah babi mengalami pernapasan cepat",
+        "kode_penyakit": [
+            "P1",
+            "P5",
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G07",
+        "nama": "Apakah denyut jantung babi cepat (takikardia)",
+        "kode_penyakit": [
+            "P1"
+        ]
+    },
+    {
+        "kode_gejala": "G08",
+        "nama": "Apakah bulu babi terlihat kusam dan kasar",
+        "kode_penyakit": [
+            "P1",
+            "P3",
+            "P4"
+        ]
+    },
+    {
+        "kode_gejala": "G09",
+        "nama": "Apakah babi lebih senang tidur dari biasanya",
+        "kode_penyakit": [
+            "P1"
+        ]
+    },
+    {
+        "kode_gejala": "G10",
+        "nama" :"Apakah kotoran yang dihasilkan babi berbentuk cairan",
+        "kode_penyakit": [
+            "P2",
+            "P3",
+            "P7"
+        ]
+    },
+    {
+        "kode_gejala": "G11",
+        "nama" : "Apakah feses(kotoran) babi berlendir atau berdarah",
+        "kode_penyakit": [
+            "P2",
+            "P3",
+            "P7",
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G12",
+        "nama" : "Apakah perut babi kembung atau membesar",
+        "kode_penyakit": [
+            "P2",
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G13",
+        "nama" : "Apakah babi menunjukkan tanda dehidrasi seperti mata cekung atau kulit kering",
+        "kode_penyakit": [
+            "P2"
+        ]
+    },
+    {
+        "kode_gejala": "G14",
+        "nama" : "Apakah kotoran babi sangat bau",
+        "kode_penyakit": [
+            "P2"
+        ]
+    },
+    {
+        "kode_gejala": "G15",
+        "nama" : "Apakah babi mengalami penurunan berat badan yang cepat",
+        "kode_penyakit": [
+            "P2",
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G16",
+        "nama" : "Apakah terdapat cacing dalam feses(kotoran) babi",
+        "kode_penyakit": [
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G17",
+        "nama" : "Apakah babi selalu merasa kesakitan",
+        "kode_penyakit": [
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G18",
+        "nama" : "Apakah perut babi membuncit",
+        "kode_penyakit": [
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G19",
+        "nama" : "Apakah anus babi bengkak dan berwarna kemerahan",
+        "kode_penyakit": [
+            "P3"
+        ]
+    },
+    {
+        "kode_gejala": "G20",
+        "nama" : "Apakah babi menggaruk atau mengalami gatal-gatal sekujur tubuh",
+        "kode_penyakit": [
+            "P4"
+        ]
+    },
+    {
+        "kode_gejala": "G21",
+        "nama" : "Apakah terdapat luka terbuka pada kulit babi",
+        "kode_penyakit": [
+            "P4",
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G22",
+        "nama" : "Apakah terdapat luka terbuka pada kulit babi",
+        "kode_penyakit": [
+            "P4"
+        ]
+    },
+    {
+        "kode_gejala": "G23",
+        "nama" : "Apakah babi demam",
+        "kode_penyakit": [
+            "P4"
+        ]
+    },
+    {
+        "kode_gejala": "G24",
+        "nama" : "Apakah babi kesulitan bernapas",
+        "kode_penyakit": [
+            "P4"
+        ]
+    },
+    {
+        "kode_gejala": "G25",
+        "nama" : "Apakah babi nafsu makannya menurun lebih jauh",
+        "kode_penyakit": [
+            "P4"
+        ]
+    },
+    {
+        "kode_gejala": "G26",
+        "nama" : "Apakah terdapat bintik-bintik kecil berwarna merah dan melepuh yang mengeluarkan cairan darah berwarna putih (nanah)",
+        "kode_penyakit": [
+            "P5"
+        ]
+    },
+    {
+        "kode_gejala": "G27",
+        "nama" : "Apakah terlihat leleran dari mata dan hidung babi",
+        "kode_penyakit": [
+            "P5",
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G28",
+        "nama" : "Apakah ada luka atau melepuh di sekitar mulut, lidah, dan kuku babi", 
+        "kode_penyakit": [
+            "P5",
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G29",
+        "nama" : "Apakah babi pincang atau mengalami nyeri pada kaki",
+        "kode_penyakit": [
+            "P5",
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G30",
+        "nama" : "Apakah terdapat vesikel (lepuh) di sekitar mulut atau hidung babi",
+        "kode_penyakit": [
+            "P5",
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G31",
+        "nama" : "Apakah produksi susu babi betina menurun",
+        "kode_penyakit": [
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G32",
+        "nama" : "Apakah kuku babi terlepas",
+        "kode_penyakit": [
+            "P6"
+        ]
+    },
+    {
+        "kode_gejala": "G33",
+        "nama" : "Apakah terjadi kematian mendadak pada babi",
+        "kode_penyakit": [
+            "P7",
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G34",
+        "nama" : "Apakah babi mengalami kejang atau gemetaran",
+        "kode_penyakit": [
+            "P7"
+        ]
+    },
+    {
+        "kode_gejala": "G35",
+        "nama" : "Apakah babi demam sangat tinggi",
+        "kode_penyakit": [
+            "P7",
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G36",
+        "nama" : "Apakah babi mengalami batuk atau muntah",
+        "kode_penyakit": [
+            "P7"
+        ]
+    },
+    {
+        "kode_gejala": "G37",
+        "nama" : "Apakah babi tampak jalan sempoyongan (ataxia)",
+        "kode_penyakit": [
+            "P7"
+        ]
+    },
+    {
+        "kode_gejala": "G38",
+        "nama" : "Apakah babi mengalami kejang",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G39",
+        "nama" : "Apakah mata babi merah dan berair",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G40",
+        "nama" : "Apakah babi mengalami tremor tubuh (gemetar ringan)",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G41",
+        "nama" : "Apakah terdapat lesi(ruam) pada kulit dan pendarahan pada kulit babi",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G42",
+        "nama" : "Apakah terdapat lesi(ruam) pada kulit dan pendarahan pada kulit babi",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G43",
+        "nama" : "Apakah babi tidak responsif terhadap rangsangan",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G44",
+        "nama" : "Apakah terjadi penurunan suhu tubuh tiba-tiba menjelang kematian",
+        "kode_penyakit": [
+            "P8"
+        ]
+    },
+    {
+        "kode_gejala": "G45",
+        "nama" : "Apakah terdapat pendarahan dari lubang hidung, mulut, atau anus babi",
+         "kode_penyakit": [
+            "P8"
+        ]
+    }
+]

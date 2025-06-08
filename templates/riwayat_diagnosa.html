@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Diagnosa</title>
+  <link rel="stylesheet" href="../static/css/diagnosa.css">
+</head>
+<body>
+  {% include "sidebar.html" %}
+  <div class="table-container">
+    <h2>Riwayat Diagnosa</h2>
+    <table class="">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th >Gejala</th>
+              <th>Kode Penyakit</th>
+              <th>Nama Penyakit</th>
+              <th>Nama Peternak</th>
+              <th>Rekomendasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for hasil in hasil_list %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ hasil["gejala"] }}</td>
+              <td>{{ hasil["kode_penyakit"] }}</td>
+              <td>{{ hasil["nama_penyakit"] }}</td>
+              <td>{{ hasil["nama"] }}</td>
+              <td>
+                <ol>
+                  {% for line in hasil['rekomendasi'].split('\n') %}
+                    <li>{{ line }}</li>
+                  {% endfor %}
+                </ol>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="6" class="text-center">Tidak ada data hasil diagnosa.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button onclick="downloadCSV()" style="margin: 20px 0; padding: 10px 20px;">Simpan ke Excel (CSV)</button>
+
+  </div>
+  <script>
+  function downloadCSV() {
+    let csv = [];
+    const rows = document.querySelectorAll("table tr");
+    rows.forEach(row => {
+      const cols = row.querySelectorAll("th, td");
+      const rowData = [];
+      cols.forEach(col => {
+        rowData.push('"' + col.innerText.replace(/\n/g, ' ').replace(/"/g, '""') + '"');
+      });
+      csv.push(rowData.join(","));
+    });
+
+    const csvContent = csv.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    link.setAttribute("download", "riwayat_diagnosa.csv");
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  </script>
+  </body>
+</html>
