@@ -1,0 +1,13 @@
+flask
+opencv-python
+pillow
+numpy
+pyngrok
+requests
+mysql-connector-python
+supabase
+
+# hapus dan jalankan 
+pip install -r requirements.txt
+python -m venv env
+env\Scripts\activate
