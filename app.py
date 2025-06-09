@@ -378,10 +378,11 @@ def data_penyakit():
                                 penyakit_list=sorted_penyakit,
                                 nama_admin=session.get('nama_admin'),
                                 foto_admin=session.get('foto_admin'))
-response_hasil = supabase.table("hasil_diagnosa").select("*").order("id", desc=True).execute()
-hasil_list = response_hasil.data if response_hasil.data else []
+
 @app.route('/riwayat_diagnosa')
 def riwayat_diagnosa():
+    response_hasil = supabase.table("hasil_diagnosa").select("*").order("id", desc=True).execute()
+    hasil_list = response_hasil.data if response_hasil.data else []
     return render_template("riwayat_diagnosa.html", 
                            nama_admin=session.get('nama_admin'),
                             foto_admin=session.get('foto_admin'),
