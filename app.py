@@ -45,67 +45,6 @@ def prediksi():
     sorted_gejala = sorted(response.data, key=lambda x: x['kode_gejala'])
     return render_template('prediksi.html', rules=sorted_gejala)
 
-# @app.route('/hasil', methods=['POST'])
-# def hasil():
-#     gejala_aktif = request.form.getlist('symptoms')
-#     hasil_diagnosa = proses_data_input(gejala_aktif)
-#     print(hasil_diagnosa)
-#     if hasil_diagnosa:
-#         top_disease = max(hasil_diagnosa, key=hasil_diagnosa.get)
-#         nilai_tertinggi = hasil_diagnosa[top_disease]
-
-#         # Ambil detail penyakit dari Supabase
-#         response = supabase.table("penyakit").select("*").eq("kode_penyakit", top_disease).execute()
-#         if response.data:
-#             data = response.data[0]
-#             hasil_tertinggi = {
-#                 "kode": top_disease,
-#                 "skor": nilai_tertinggi,
-#                 "nama": data.get("nama_penyakit", "Tidak ditemukan"),
-#                 "definisi": data.get("definisi", "Tidak ada definisi tersedia."),
-#                 "rekomendasi": data.get("rekomendasi_penanganan", "Tidak ada rekomendasi.")
-#             }
-#         else:
-#             hasil_tertinggi = {
-#                 "kode": top_disease,
-#                 "skor": nilai_tertinggi,
-#                 "nama": "Tidak ditemukan",
-#                 "definisi": "Tidak ada definisi tersedia.",
-#                 "rekomendasi": "Tidak ada rekomendasi."
-#             }
-#         supabase.table("hasil_diagnosa").insert({
-#             "gejala": ",".join(gejala_aktif),
-#             "kode_penyakit": top_disease,
-#             "nama_penyakit": hasil_tertinggi["nama"],
-#             "skor": nilai_tertinggi,
-#             "rekomendasi": hasil_tertinggi["rekomendasi"]
-#         }).execute()
-#     else:
-#         hasil_tertinggi = {}
-
-#     return render_template('hasil.html', hasil=hasil_tertinggi, selected=gejala_aktif)
-
-# @app.route('/hasil', methods=['POST'])
-# def hasil():
-#     gejala_aktif = request.form.getlist('symptoms')
-#     gejala_data = ambil_gejala_dari_db(gejala_aktif)
-
-#     if not gejala_data:
-#         return jsonify({"error": "Gejala tidak ditemukan"}), 400
-
-#     basis_pengetahuan = buat_basis_pengetahuan(gejala_data)
-
-#     gejala_aktif_dan_bobot = [
-#         {
-#             'kode_gejala': item['kode_gejala'],
-#             'bobot': float(item.get('bobot', 1))
-#         }
-#         for item in gejala_data
-#     ]
-
-#     hasil_diagnosa = proses_logika_fuzzy(gejala_aktif_dan_bobot, basis_pengetahuan)
-#     return jsonify(hasil_diagnosa)
-
 @app.route('/hasil', methods=['POST'])
 def hasil():
     gejala_aktif = request.form.getlist('symptoms')
