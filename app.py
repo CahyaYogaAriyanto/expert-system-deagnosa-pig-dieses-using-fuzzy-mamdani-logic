@@ -395,8 +395,20 @@ def tambah_gejala():
     nama = request.form.getlist('nama')
     kode_penyakit = request.form.getlist('kode_penyakit')
     bobot = request.form.getlist('bobot')
+
     if not (len(kode_gejala) == len(nama) == len(kode_penyakit) == len(bobot)):
-        return "Data tidak lengkap atau tidak sejajar", 400
+        flash("❌ Data tidak lengkap atau tidak sejajar", "danger")
+        return redirect(url_for('data_gejala'))
+
+    existing_data = supabase.table("gejala").select("kode_gejala, nama").execute().data
+    for i in range(len(kode_gejala)):
+        for item in existing_data:
+            if item['kode_gejala'].lower() == kode_gejala[i].lower():
+                flash(f"❌ Gagal menambahkan Kode gejala '{kode_gejala[i]}' sudah ada.", "danger")
+                return redirect(url_for('data_gejala'))
+            if item['nama'].lower() == nama[i].lower():
+                flash(f"❌ Gagal menambahkan gejala '{nama[i]}' sudah ada.", "danger")
+                return redirect(url_for('data_gejala'))
     data_baru = []
     for i in range(len(kode_gejala)):
         data_baru.append({
@@ -406,28 +418,22 @@ def tambah_gejala():
             "bobot": bobot[i]
         })
     response = supabase.table("gejala").insert(data_baru).execute()
+
     if response.data:
-        gejala_Data = supabase.table("gejala").select("*").execute().data
-        sorted_gejala = sorted(gejala_Data, key=lambda x: x['kode_gejala'])
-        last_kode = sorted_gejala[-1]['kode_gejala'] if sorted_gejala else 'G00'
-        print("Data berhasil ditambahkan.")
-        return render_template("data_gejala.html",
-                                gejala_list=sorted_gejala,
-                                last_kode=last_kode,
-                                nama_admin=session.get('nama_admin'),
-                                foto_admin=session.get('foto_admin')) 
+        flash("✅ Data gejala berhasil ditambahkan.", "success")
     else:
-        print("Gagal menambahkan data.")
+        flash("❌ Gagal menambahkan data gejala.", "danger")
+
+    return redirect(url_for('data_gejala'))
 
 @app.route('/hapus_gejala/<string:kode_gejala>', methods=['POST'])
 def hapus_gejala(kode_gejala):
     response = supabase.table("gejala").delete().eq("kode_gejala", kode_gejala).execute()
     if response and response.data:
-        print("Data gejala berhasil dihapus.")
+        print()
+        flash("✅ Data gejala berhasil dihapus.", "success")
     else:
-        print("Gagal menghapus data atau data tidak ditemukan.")
-
-    # Ambil ulang data untuk ditampilkan
+        flash("❌ Gagal menghapus data ", "danger")
     gejala_Data = supabase.table("gejala").select("*").execute().data
     sorted_gejala = sorted(gejala_Data, key=lambda x: x['kode_gejala'])
     last_kode = sorted_gejala[-1]['kode_gejala'] if sorted_gejala else 'G00'
@@ -440,12 +446,12 @@ def hapus_gejala(kode_gejala):
 
 @app.route('/tambah_penyakit', methods=['POST'])
 def tambah_penyakit():
-    kode = request.form['kode_penyakit']
+    kode = request.form['kode_penyakit'].strip().upper()
+    
     nama = request.form['nama_penyakit']
     definisi = request.form['definisi']
     rekomendasi = request.form['rekomendasi_penanganan']
 
-    # Ambil data penyakit dari database
     existing_data = supabase.table("penyakit").select("kode_penyakit, nama_penyakit").execute().data
 
     for penyakit in existing_data:
@@ -456,7 +462,6 @@ def tambah_penyakit():
             flash('❌ Nama penyakit sudah ada.', 'danger')
             return redirect(url_for('data_penyakit'))
 
-    # Insert data baru jika tidak duplikat
     supabase.table("penyakit").insert([{
         "kode_penyakit": kode,
         "nama_penyakit": nama,
