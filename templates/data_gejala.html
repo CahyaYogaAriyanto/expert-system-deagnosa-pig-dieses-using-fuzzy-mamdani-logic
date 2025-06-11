@@ -98,8 +98,9 @@
             <tr>
               <th scope="col">Kode Gejala</th>
               <th scope="col">Nama Gejala</th>
-              <!-- <th scope="col">Kode Penyakit</th> -->
+              <th scope="col">Kode Penyakit</th>
               <th scope="col">Bobot</th>
+              <th scope="col">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -107,10 +108,14 @@
             <tr>
               <td>{{ gejala['kode_gejala'] }}</td>
               <td>{{ gejala['nama'] }}</td>
-              <!-- <td>{{ gejala['kode_penyakit'] }}</td> -->
+              <td>{{ gejala['kode_penyakit'] }}</td>
               <td>{{ gejala['bobot'] }}</td>
+              <td>
+                <form action="/hapus_gejala/{{ gejala['kode_gejala'] }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus gejala ini?');">
+                  <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                </form>
+              </td>
             </tr>
-            
             {% else %}
             <tr>
               <td colspan="3" class="text-center">Tidak ada data gejala</td>
@@ -134,10 +139,8 @@
   <script >
     function tambahBarisInput() {
     const tbody = document.querySelector("tbody");
-
-    // Ambil kode terakhir dari Jinja (misalnya: G07)
-    const lastKode = "{{ last_kode }}"; // e.g., "G07"
-    const lastNum = parseInt(lastKode.slice(1)); // Ambil angka: 7
+    const lastKode = "{{ last_kode }}"; 
+    const lastNum = parseInt(lastKode.slice(1)); 
     const nextNum = lastNum + 1;
 
     // Format jadi G08

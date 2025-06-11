@@ -373,7 +373,8 @@ def data_gejala():
                                 
 @app.route('/data_penyakit')
 def data_penyakit():
-    sorted_penyakit = sorted(penyakit_list, key=lambda x: x['kode_penyakit'])
+    # sorted_penyakit = sorted(penyakit_list, key=lambda x: x['kode_penyakit'])
+    sorted_penyakit = sorted(penyakit_list, key=lambda x: int(x['kode_penyakit'].replace('P', '')))
     return render_template("data_penyakit.html",
                                 penyakit_list=sorted_penyakit,
                                 nama_admin=session.get('nama_admin'),
@@ -417,6 +418,71 @@ def tambah_gejala():
                                 foto_admin=session.get('foto_admin')) 
     else:
         print("Gagal menambahkan data.")
+
+@app.route('/hapus_gejala/<string:kode_gejala>', methods=['POST'])
+def hapus_gejala(kode_gejala):
+    response = supabase.table("gejala").delete().eq("kode_gejala", kode_gejala).execute()
+    if response and response.data:
+        print("Data gejala berhasil dihapus.")
+    else:
+        print("Gagal menghapus data atau data tidak ditemukan.")
+
+    # Ambil ulang data untuk ditampilkan
+    gejala_Data = supabase.table("gejala").select("*").execute().data
+    sorted_gejala = sorted(gejala_Data, key=lambda x: x['kode_gejala'])
+    last_kode = sorted_gejala[-1]['kode_gejala'] if sorted_gejala else 'G00'
+
+    return render_template("data_gejala.html",
+                           gejala_list=sorted_gejala,
+                           last_kode=last_kode,
+                           nama_admin=session.get('nama_admin'),
+                           foto_admin=session.get('foto_admin'))
+
+@app.route('/tambah_penyakit', methods=['POST'])
+def tambah_penyakit():
+    kode = request.form['kode_penyakit']
+    nama = request.form['nama_penyakit']
+    definisi = request.form['definisi']
+    rekomendasi = request.form['rekomendasi_penanganan']
+
+    # Ambil data penyakit dari database
+    existing_data = supabase.table("penyakit").select("kode_penyakit, nama_penyakit").execute().data
+
+    for penyakit in existing_data:
+        if penyakit['kode_penyakit'].lower() == kode.lower():
+            flash('❌ Kode penyakit sudah digunakan.', 'danger')
+            return redirect(url_for('data_penyakit'))
+        if penyakit['nama_penyakit'].lower() == nama.lower():
+            flash('❌ Nama penyakit sudah ada.', 'danger')
+            return redirect(url_for('data_penyakit'))
+
+    # Insert data baru jika tidak duplikat
+    supabase.table("penyakit").insert([{
+        "kode_penyakit": kode,
+        "nama_penyakit": nama,
+        "definisi": definisi,
+        "rekomendasi_penanganan": rekomendasi
+    }]).execute()
+
+    flash('✅ Data penyakit berhasil ditambahkan.', 'success')
+    penyakit_data = supabase.table("penyakit").select("*").execute().data
+    sorted_penyakit = sorted(penyakit_data, key=lambda x: int(x['kode_penyakit'].replace('P', '')))
+
+    return render_template("data_penyakit.html",
+                           penyakit_list=sorted_penyakit,
+                           nama_admin=session.get('nama_admin'),
+                           foto_admin=session.get('foto_admin'))
+
+@app.route('/hapus_penyakit/<string:kode_penyakit>', methods=['POST'])
+def hapus_penyakit(kode_penyakit):
+    response = supabase.table("penyakit").delete().eq("kode_penyakit", kode_penyakit).execute()
+    penyakit_data = supabase.table("penyakit").select("*").execute().data
+    flash('✅ Data penyakit berhasil dihapus.', 'success')
+    return render_template("data_penyakit.html",
+                           penyakit_list=penyakit_data,
+                           nama_admin=session.get('nama_admin'),
+                           foto_admin=session.get('foto_admin'))
+
                             
 @app.route('/logout', methods=['POST'])
 def logout():
