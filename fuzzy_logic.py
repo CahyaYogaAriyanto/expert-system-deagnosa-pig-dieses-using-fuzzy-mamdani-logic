@@ -16,7 +16,6 @@ def fuzzify_mamdani(nilai):
     }
 
 def defuzzifikasi_mamdani(fuzzy_values):
-    # Menggunakan metode rata-rata tertimbang (centroid simplifikasi)
     bobot = {'rendah': 30, 'sedang': 60, 'tinggi': 90}
     total = sum(fuzzy_values[level] * bobot[level] for level in fuzzy_values)
     total_keanggotaan = sum(fuzzy_values.values())
