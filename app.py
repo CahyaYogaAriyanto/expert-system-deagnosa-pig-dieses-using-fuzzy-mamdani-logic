@@ -3,7 +3,6 @@ import tempfile
 import traceback
 from flask import Flask, render_template, request,flash, session, redirect, url_for, Response, jsonify
 import sqlite3
-import mysql.connector
 import requests
 from pyngrok import ngrok
 import cv2
@@ -25,6 +24,7 @@ app.secret_key = 'super-secret-key'
 
 # Set path untuk folder upload
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'foto_admin')
+
 # Buat folder jika belum ada
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 UPLOAD_FOLDER = 'static/foto_admin'
@@ -66,8 +66,10 @@ def hasil():
         }
         for item in gejala_data
     ]
+
     # Proses logika fuzzy untuk menghitung skor keyakinan per penyakit
     hasil_diagnosa = proses_logika_fuzzy(gejala_aktif_dan_bobot, basis_pengetahuan)
+    print(hasil_diagnosa)
     nama = request.form.get('nama')
     hasil_tertinggi = {}
     if hasil_diagnosa:

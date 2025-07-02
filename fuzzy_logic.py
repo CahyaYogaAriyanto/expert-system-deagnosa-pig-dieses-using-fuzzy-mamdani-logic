@@ -39,10 +39,28 @@ def fuzzify_mamdani(nilai):
     }
 
 def defuzzifikasi_mamdani(fuzzy_values):
-    bobot = {'rendah': 30, 'sedang': 60, 'tinggi': 90}
-    total = sum(fuzzy_values[level] * bobot[level] for level in fuzzy_values)
-    total_keanggotaan = sum(fuzzy_values.values())
-    return total / total_keanggotaan if total_keanggotaan != 0 else 0
+    # Domain output dari 0 sampai 100
+    z_values = np.linspace(0, 100, 1000)
+
+    # Fungsi keanggotaan berdasarkan nilai fuzzy hasil sebelumnya
+    def mu_rendah(z):
+        return np.clip((50 - z) / 50, 0, 1) * fuzzy_values['rendah']
+
+    def mu_sedang(z):
+        return np.clip(1 - np.abs(z - 50) / 25, 0, 1) * fuzzy_values['sedang']
+
+    def mu_tinggi(z):
+        return np.clip((z - 50) / 50, 0, 1) * fuzzy_values['tinggi']
+
+    # Gabungan dari semua nilai fuzzy
+    mu_total = np.maximum.reduce([mu_rendah(z_values), mu_sedang(z_values), mu_tinggi(z_values)])
+
+    # Hitung nilai defuzzifikasi menggunakan rumus centroid
+    numerator = np.sum(z_values * mu_total)
+    denominator = np.sum(mu_total)
+
+    return numerator / denominator if denominator != 0 else 0
+
 
 def ambil_gejala_dari_db(gejala_aktif):
     response = supabase.table("gejala").select("kode_gejala,nama,bobot,kode_penyakit").in_("kode_gejala", gejala_aktif).execute()
@@ -81,14 +99,11 @@ def proses_logika_fuzzy(gejala_aktif_dan_bobot, basis_pengetahuan):
             for level in ['rendah', 'sedang', 'tinggi']:
                 nilai_fuzzy[level].append(fz[level] * bobot)
                 total_bobot[level] += bobot
-
         fuzzy_avg = {
             level: sum(nilai_fuzzy[level]) / total_bobot[level] if total_bobot[level] else 0
             for level in ['rendah', 'sedang', 'tinggi']
         }
-
         z = defuzzifikasi_mamdani(fuzzy_avg)
-
         # Penyesuaian berdasarkan jumlah gejala yang cocok
         tingkat_kecocokan = len(gejala_items) / max(len(gejala_aktif_dan_bobot), 1)
         z_akhir = z * tingkat_kecocokan
