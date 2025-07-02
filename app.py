@@ -498,14 +498,6 @@ def logout():
 def inject_request():
     return dict(request=request)
 
-# if __name__ == "__main__":
-#     # buka port 5000
-#     public_url = ngrok.connect(5000)
-#     print(" * Ngrok URL:", public_url)
-    
-#     app.run(port=5000)
-
-
 if __name__ == "__main__":
     app.run(debug=True)
 
