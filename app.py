@@ -66,10 +66,8 @@ def hasil():
         }
         for item in gejala_data
     ]
-
     # Proses logika fuzzy untuk menghitung skor keyakinan per penyakit
     hasil_diagnosa = proses_logika_fuzzy(gejala_aktif_dan_bobot, basis_pengetahuan)
-    print(hasil_diagnosa)
     nama = request.form.get('nama')
     hasil_tertinggi = {}
     if hasil_diagnosa:

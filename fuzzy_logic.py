@@ -9,10 +9,33 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Fungsi keanggotaan fuzzy Mamdani
 def fuzzify_mamdani(nilai):
+    # --- RENDANG ---
+    if nilai <= 5 :
+        derajat_rendah = (5 - nilai) / 5
+    else:
+        derajat_rendah = 0.0
+    # --- SEDANG ---
+    if 2.5 <= nilai <= 7.5:
+        derajat_sedang = 1 - abs(nilai - 5) / 2.5 
+    else:
+        derajat_sedang = 0.0
+
+    # --- TINGGI ---
+    if nilai >= 5:
+        derajat_tinggi = (nilai - 5) / 5  
+    else:
+        derajat_tinggi = 0.0 
+
+    # Pastikan semua nilai dalam rentang 0 sampai 1
+    derajat_rendah = max(0.0, min(1.0, derajat_rendah))
+    derajat_sedang = max(0.0, min(1.0, derajat_sedang))
+    derajat_tinggi = max(0.0, min(1.0, derajat_tinggi))
+
+    # Kembalikan sebagai dictionary
     return {
-        'rendah': max(0, min(1, (5 - nilai) / 5)),
-        'sedang': max(0, 1 - abs(nilai - 5) / 2.5),
-        'tinggi': max(0, min(1, (nilai - 5) / 5))
+        'rendah': derajat_rendah,
+        'sedang': derajat_sedang,
+        'tinggi': derajat_tinggi
     }
 
 def defuzzifikasi_mamdani(fuzzy_values):
