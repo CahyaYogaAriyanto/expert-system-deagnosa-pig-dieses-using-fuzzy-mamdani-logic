@@ -6,6 +6,9 @@ pyngrok
 requests
 mysql-connector-python
 supabase
+flask-socketio 
+eventlet 
+werkzeug
 
 # hapus dan jalankan 
 pip install -r requirements.txt
