@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Chat Pakar</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      background-color: #eae6df;
+    }
+
+    .sidebar {
+      width: 300px;
+      background-color: #fff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 16px;
+      background-color: #ededed;
+      font-weight: bold;
+      font-size: 18px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .user-item {
+      padding: 10px 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-item:hover,
+    .user-item.active {
+      background-color: #f5f5f5;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      background-color: #00a884;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .username {
+      font-size: 15px;
+      color: #111;
+    }
+
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a5be7e8b.png');
+      background-color: #f0f0f0;
+    }
+
+    .chat-header {
+      padding: 16px;
+      background-color: #ededed;
+      font-weight: bold;
+      font-size: 17px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 8px;
+      line-height: 1.4;
+      font-size: 14px;
+      position: relative;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .message.user {
+      align-self: flex-start;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+    }
+
+    .message.admin {
+      align-self: flex-end;
+      background-color: #685fe5;
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 12px;
+      background-color: #f0f0f0;
+      border-top: 1px solid #ccc;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      background-color: #00a884;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .chat-input button:hover {
+      background-color: #029e78;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100px;
+      }
+      .user-item .username {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-header">Pengguna Aktif</div>
+    <div id="userList"></div>
+  </div>
+
+  <div class="chat-area">
+    <div class="chat-header">Obrolan dengan: <span id="selectedUser">-</span></div>
+    <div class="chat-messages" id="chatBox"></div>
+    <div class="chat-input">
+      <input type="text" id="adminMessage" placeholder="Ketik balasan...">
+      <button onclick="sendReply()">Kirim</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    let selectedUser = null;
+    const userList = document.getElementById('userList');
+    const chatBox = document.getElementById('chatBox');
+    const users = new Set();
+
+    socket.emit('join', { username: 'admin' });
+
+    function getInitials(name) {
+      return name.slice(0, 2).toUpperCase();
+    }
+
+    function createUserItem(username) {
+      const userDiv = document.createElement('div');
+      userDiv.className = 'user-item';
+      userDiv.id = `user-${username}`;
+
+      const initials = getInitials(username);
+
+      userDiv.innerHTML = `
+        <div class="avatar">${initials}</div>
+        <div class="username">${username}</div>
+      `;
+
+      userDiv.onclick = () => selectUser(username);
+      return userDiv;
+    }
+
+    function loadUsers() {
+      fetch('/chat_data')
+        .then(res => res.json())
+        .then(data => {
+          const userSet = new Set();
+          data.forEach(row => {
+            if (row.sender !== 'admin') userSet.add(row.sender);
+            if (row.receiver !== 'admin' && row.receiver !== row.sender) userSet.add(row.receiver);
+          });
+
+          userSet.forEach(username => {
+            if (!users.has(username)) {
+              users.add(username);
+              const userDiv = createUserItem(username);
+              userList.appendChild(userDiv);
+            }
+          });
+        });
+    }
+
+    loadUsers();
+
+    socket.on('admin_receive', (data) => {
+      const { username, message } = data;
+
+      if (!users.has(username)) {
+        users.add(username);
+        const userDiv = createUserItem(username);
+        userList.appendChild(userDiv);
+      }
+
+      if (selectedUser === username) {
+        appendMessage('user', message);
+      }
+    });
+
+    function selectUser(username) {
+      selectedUser = username;
+      document.getElementById('selectedUser').textContent = username;
+
+      document.querySelectorAll('.user-item').forEach(div => div.classList.remove('active'));
+      document.getElementById(`user-${username}`).classList.add('active');
+      chatBox.innerHTML = '';
+
+      fetch('/chat_data')
+        .then(res => res.json())
+        .then(data => {
+          const riwayat = data.filter(row =>
+            (row.sender === username && row.receiver === 'admin') ||
+            (row.sender === 'admin' && row.receiver === username)
+          );
+
+          riwayat.forEach(row => {
+            appendMessage(row.sender === 'admin' ? 'admin' : 'user', row.message);
+          });
+        });
+    }
+
+    function appendMessage(sender, message) {
+      const msg = document.createElement('div');
+      msg.className = `message ${sender}`;
+      msg.textContent = message;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendReply() {
+      const msg = document.getElementById('adminMessage').value.trim();
+      if (msg && selectedUser) {
+        socket.emit('admin_reply', { username: selectedUser, message: msg });
+        appendMessage('admin', msg);
+        document.getElementById('adminMessage').value = '';
+      }
+    }
+  </script>
+
+</body>
+</html>

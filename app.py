@@ -1,11 +1,6 @@
 from io import BytesIO
-import tempfile
-import traceback
-from flask import Flask, render_template, request,flash, session, redirect, url_for, Response, jsonify
-import sqlite3
+from flask import Flask, render_template, request,flash,session,redirect,url_for,Response,jsonify
 import requests
-from pyngrok import ngrok
-import cv2
 from PIL import Image
 import numpy as np
 import os
@@ -13,6 +8,7 @@ from fuzzy_logic import proses_logika_fuzzy,ambil_gejala_dari_db,buat_basis_peng
 import json
 from supabase import create_client, Client
 from werkzeug.utils import secure_filename
+from flask_socketio import SocketIO, emit, join_room 
 import uuid
 
 app = Flask(__name__)
@@ -30,6 +26,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 UPLOAD_FOLDER = 'static/foto_admin'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def home():
@@ -41,9 +38,18 @@ def data():
 
 @app.route('/prediksi')
 def prediksi():
+    if 'user' not in session:
+        flash('Silakan login terlebih dahulu untuk mengakses fitur ini.', 'login_required')
+        return redirect(url_for('not_login'))
+    
     response = supabase.table("gejala").select("*").execute()
     sorted_gejala = sorted(response.data, key=lambda x: x['kode_gejala'])
     return render_template('prediksi.html', rules=sorted_gejala)
+    # return redirect(url_for('not_login'))
+
+@app.route('/not_login')
+def not_login():
+    return render_template('login_cek.html')
 
 @app.route('/hasil', methods=['POST'])
 def hasil():
@@ -70,44 +76,55 @@ def hasil():
     # Proses logika fuzzy untuk menghitung skor keyakinan per penyakit
     hasil_diagnosa = proses_logika_fuzzy(gejala_aktif_dan_bobot, basis_pengetahuan)
     print(hasil_diagnosa)
-    nama = request.form.get('nama')
+    id_user = session.get('id_user')
+    nama = session.get('nama')
     hasil_tertinggi = {}
     if hasil_diagnosa:
-        # Ambil penyakit dengan skor tertinggi
-        top_disease = max(hasil_diagnosa, key=hasil_diagnosa.get)
-        nilai_tertinggi = hasil_diagnosa[top_disease]
+        # Ambil maksimal 3 penyakit dengan skor tertinggi
+        penyakit_teratas = sorted(hasil_diagnosa.items(), key=lambda item: item[1], reverse=True)[:3]
 
-        # Ambil informasi penyakit dari Supabase
-        response = supabase.table("penyakit").select("*").eq("kode_penyakit", top_disease).execute()
-        if response.data:
-            data = response.data[0]
-            hasil_tertinggi = {
-                "kode": top_disease,
-                "skor": nilai_tertinggi,
-                "nama": data.get("nama_penyakit", "Tidak ditemukan"),
-                "definisi": data.get("definisi", "Tidak ada definisi tersedia."),
-                "rekomendasi": data.get("rekomendasi_penanganan", "Tidak ada rekomendasi.")
-            }
-        else:
-            hasil_tertinggi = {
-                "kode": top_disease,
-                "skor": nilai_tertinggi,
-                "nama": "Tidak ditemukan",
-                "definisi": "Tidak ada definisi tersedia.",
-                "rekomendasi": "Tidak ada rekomendasi."
-            }
+        # Hitung total skor mentah
+        total_skor = sum([item[1] for item in penyakit_teratas])
 
-        # Simpan hasil ke database
+        hasil_tertinggi_list = []
+        for kode_penyakit, skor in penyakit_teratas:
+            # Normalisasi skor jadi persentase
+            skor_normalisasi = (skor / total_skor) * 100 if total_skor > 0 else 0
+
+            # Ambil informasi penyakit dari Supabase
+            response = supabase.table("penyakit").select("*").eq("kode_penyakit", kode_penyakit).execute()
+            if response.data:
+                data = response.data[0]
+                hasil = {
+                    "kode": kode_penyakit,
+                    "skor": skor_normalisasi,
+                    "nama": data.get("nama_penyakit", "Tidak ditemukan"),
+                    "definisi": data.get("definisi", "Tidak ada definisi tersedia."),
+                    "rekomendasi": data.get("rekomendasi_penanganan", "Tidak ada rekomendasi.")
+                }
+            else:
+                hasil = {
+                    "kode": kode_penyakit,
+                    "skor": skor_normalisasi,
+                    "nama": "Tidak ditemukan",
+                    "definisi": "Tidak ada definisi tersedia.",
+                    "rekomendasi": "Tidak ada rekomendasi."
+                }
+            hasil_tertinggi_list.append(hasil)
+
+        # Simpan ke database hanya penyakit tertinggi (index 0)
+        penyakit_utama = hasil_tertinggi_list[0]
         supabase.table("hasil_diagnosa").insert({
+            'id_user': id_user,
             "gejala": ",".join(gejala_aktif),
-            "kode_penyakit": top_disease,
-            "nama_penyakit": hasil_tertinggi["nama"],
-            "skor": nilai_tertinggi,
-            "rekomendasi": hasil_tertinggi["rekomendasi"],
-            "nama" : nama,
+            "kode_penyakit": penyakit_utama["kode"],
+            "nama_penyakit": penyakit_utama["nama"],
+            "skor": round(penyakit_utama["skor"], 2),
+            "rekomendasi": penyakit_utama["rekomendasi"],
+            "nama": nama,
         }).execute()
 
-    return render_template('hasil.html', hasil=hasil_tertinggi, selected=gejala_aktif)
+    return render_template('hasil.html', hasil=hasil_tertinggi_list, selected=gejala_aktif)
 
 
 @app.route('/about')
@@ -488,7 +505,162 @@ def hapus_penyakit(kode_penyakit):
                            nama_admin=session.get('nama_admin'),
                            foto_admin=session.get('foto_admin'))
 
-                            
+
+@app.route('/login_user',methods=['POST','GET'])
+def login_user():
+    return render_template("login_user.html")
+
+@app.route('/login_cek', methods=['POST', 'GET'])
+def login_cek():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Ambil user berdasarkan email dan password
+    result = supabase.table('pengguna').select('*').eq('email', email).eq('password', password).execute()
+
+    if result.data:
+        user = result.data[0]
+        if user['password'] == password:
+            # Simpan data ke dalam session
+            session['user'] = user['email']
+            session['nama'] = user.get('nama')
+            session['id_user'] = user.get('id_user')
+            flash('Login berhasil!', 'user_success')
+            return redirect(url_for('home'))
+        else:
+            flash("Password salah.", "user_danger")
+            return redirect(url_for('login_user'))
+    else:
+        flash("Email tidak ditemukan.", "user_danger")
+        return redirect(url_for('login_user'))
+
+@app.route('/daftar_user')
+def daftar_user():
+    return render_template("daftar_user.html")
+
+@app.route('/daftar_cek', methods=['POST'])
+def daftar_cek():
+    nama = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
+
+    # Cek apakah sudah ada
+    existing = supabase.table('pengguna').select('*').eq('email', email).execute()
+
+    if existing.data:
+        flash("Email sudah terdaftar.")
+        return redirect(url_for('daftar_user'))
+    id_user = str(uuid.uuid4())
+    # Simpan ke Supabase
+    supabase.table('pengguna').insert({
+        'id_user': id_user,
+        'nama': nama,
+        'email': email,
+        'password': password
+    }).execute()
+
+    flash("Pendaftaran berhasil. Silakan login.","user_success")
+    return redirect(url_for('login_user'))
+
+@app.route('/login_pakar',methods=['POST','GET'])
+def login_pakar():
+    return render_template("login_pakar.html")
+
+@app.route('/pakar_cek', methods=['POST', 'GET'])
+def pakar_cek():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # Ambil user berdasarkan email dan password
+    result = supabase.table('pakar').select('*').eq('email', email).eq('password', password).execute()
+
+    if result.data:
+        user = result.data[0]
+        if user['password'] == password:
+            flash('Login berhasil!', 'pakar_success')
+            return redirect(url_for('lc_pakar'))
+        else:
+            flash("Password salah.", "pakar_danger")
+            return redirect(url_for('login_pakar'))
+    else:
+        flash("Email tidak ditemukan.", "pakar_danger")
+        return redirect(url_for('login_pakar'))
+
+@app.route('/lc_user')
+def lc_user():
+    if 'user' not in session:
+        flash('Silakan login terlebih dahulu untuk mengakses fitur ini.', 'login_required')
+        return redirect(url_for('not_login'))
+    return render_template("lc_user.html",username=session['nama'])
+
+@app.route('/lc_pakar')
+def lc_pakar():
+    return render_template("lc_pakar.html")
+
+@app.route('/chat_data')
+def chat_data():
+    url = f"{SUPABASE_URL}/rest/v1/{'chat_messages'}?select=*"
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}"
+    }
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
+
+
+@socketio.on('join')
+def on_join(data):
+    username = data['username']
+    join_room(username)
+    if username == 'admin':
+        join_room('admin')
+    print(f"[JOIN] {username} masuk ke room: {username}")
+
+@socketio.on('user_message')
+def handle_user_message(data):
+    username = data['username']
+    message = data['message']
+
+    # Kirim ke admin saja
+    emit('admin_receive', {'username': username, 'message': message}, room='admin')
+
+    # Simpan ke database
+    simpan_pesan(sender=username, receiver='admin', message=message)
+
+@socketio.on('admin_reply')
+def handle_admin_reply(data):
+    target_user = data['username']
+    message = data['message']
+
+    # Kirim ke user
+    emit('user_receive', {'message': f"{message}"}, room=target_user)
+    simpan_pesan(sender='admin', receiver=target_user, message=message)
+
+def simpan_pesan(sender, receiver, message):
+    url = f"{SUPABASE_URL}/rest/v1/{'chat_messages'}"
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+    }
+    data = {
+        "sender": sender,
+        "receiver": receiver,
+        "message": message
+    }
+    response = requests.post(url, json=data, headers=headers)
+    print("Supabase:", response.status_code, response.text)
+
+@app.route("/riwayat_user")
+def riwayat_user():
+    if 'id_user' not in session:
+        return redirect('/login') 
+    id_user = session['id_user']
+    response = supabase.table("hasil_diagnosa").select("*").eq("id_user", id_user).execute()
+    hasil = response.data
+
+    return render_template("riwayat.html", hasil=hasil)
+
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear() 
@@ -498,6 +670,9 @@ def logout():
 def inject_request():
     return dict(request=request)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    import eventlet
+    import eventlet.wsgi
+    socketio.run(app, debug=True)
+
 

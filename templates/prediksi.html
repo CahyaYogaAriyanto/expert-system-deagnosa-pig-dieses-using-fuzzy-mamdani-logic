@@ -10,11 +10,6 @@
         <div class="container">
             <h2>Form Deteksi Penyakit Babi</h2>
             <form method="post" action="{{ url_for('hasil') }}" onsubmit="return validateForm()">
-                <div class="form-floating-custom">
-                    <i class="bi bi-person input-icon"></i>
-                    <input type="text" class="form-control" id="nama" name="nama" placeholder=" " required autocomplete="off">
-                    <label for="nama">Masukkan Nama Anda</label>
-                </div>
                 {% for rule in rules %}
                     <div class="form-check">
                         <input type="checkbox" name="symptoms" value="{{ rule.kode_gejala }}" id="{{ rule.kode_gejala }}">
@@ -23,6 +18,7 @@
                         </label>
                     </div>
                 {% endfor %}
+                <a class="cek-riwayat" href="{{ url_for('riwayat_user') }}">Riwayat Diagnosa</a>
                 <button type="submit" class="submit-btn">Diagnosa</button>
             </form>
         </div>

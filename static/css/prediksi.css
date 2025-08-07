@@ -105,6 +105,23 @@ h2 {
         color: #6c63ff;
         font-size: 1.5rem; /* ikon lebih besar */
     }
+    .cek-riwayat{
+         display: inline-block;
+        padding: 10px 18px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: rgb(15, 7, 39);
+        /* background-color: #28a745; */
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .cek-riwayat:hover {
+        background-color: #313fd3;
+        color: white;
+        text-decoration: none;
+    }
 
 @media (max-width: 600px) {
     .container {

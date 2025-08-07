@@ -25,8 +25,15 @@
     <ul class="navbar-menu" id="navbar-menu">
       <li><a href="/" class="{% if request.path == '/' %}active-clicked{% endif %}">Home</a></li>
       <li><a href="/about" class="{% if request.path == '/about' %}active-clicked{% endif %}">About</a></li>
-      <li><a href="">Tanya Pakar</a></li>
-      <li class="last-menu"><a href="/login" class="{% if request.path == '/login' %}active-clicked{% endif %}">Login Admin</a></li>
+      <li><a href="/lc_user" class="{% if request.path == '/lc_user' %}active-clicked{% endif %}">Tanya Pakar</a></li>
+      <!-- <li class="last-menu"><a href="/login" class="{% if request.path == '/login' %}active-clicked{% endif %}">Login Admin</a></li> -->
+      <li class="last-menu dropdown">
+        <a href="#" class="dropdown-toggle {% if request.path == '/login' or request.path == '/login_pakar' %}active-clicked{% endif %}" id="loginToggle">Login</a>
+        <ul class="dropdown-menu" id="loginMenu">
+          <li><a href="/login">Login Admin</a></li>
+          <li><a href="/login_pakar">Login Pakar</a></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -61,6 +68,23 @@
     localStorage.setItem('activeMenu', clickedLink);
   });
 });
+  document.addEventListener("DOMContentLoaded", function() {
+    const loginToggle = document.getElementById("loginToggle");
+    const loginMenu = document.getElementById("loginMenu");
+
+    loginToggle.addEventListener("click", function(event) {
+      event.preventDefault();
+      loginMenu.style.display = loginMenu.style.display === "block" ? "none" : "block";
+    });
+
+    // Sembunyikan dropdown jika klik di luar menu
+    document.addEventListener("click", function(event) {
+      if (!loginToggle.contains(event.target) && !loginMenu.contains(event.target)) {
+        loginMenu.style.display = "none";
+      }
+    });
+  });
+
   </script>  
 </body>
 </html>

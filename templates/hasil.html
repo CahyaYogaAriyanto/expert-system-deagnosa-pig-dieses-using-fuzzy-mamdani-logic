@@ -25,34 +25,56 @@
 
             <!-- ALERT BAHAYA -->
             <div id="alert" class="alert-danger">
-                ⚠️ Peringatan: Penyakit yang terdeteksi berpotensi berbahaya!
+                ⚠️ Peringatan: Salah satu penyakit yang terdeteksi berpotensi berbahaya!
             </div>
 
-            <p><strong>Penyakit:</strong> {{ hasil.nama }} </p>
-            <p><strong>Definisi:</strong>  {{ hasil.definisi }}</p>
-            <p><strong>Rekomendasi Penanganan:</strong></p>
-            <ul>
-                {% for line in hasil.rekomendasi.split('\n') %}
-                    <li>{{ line }}</li>
-                {% endfor %}
-            </ul>
+            {% for h in hasil %}
+                <div class="penyakit-item">
+                    <p><strong>Penyakit {{ loop.index }}:</strong> {{ h.nama }} </p>
+                    <p><strong>Presentase :</strong> {{ h.skor | round(2) }}%</p>
+                    <p><strong>Definisi:</strong> {{ h.definisi }}</p>
+                    <p><strong>Rekomendasi Penanganan:</strong></p>
+                    <ul>
+                        {% for line in h.rekomendasi.split('\n') %}
+                            <li>{{ line }}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                </div>
+            {% endfor %}
+
             <div class="tombol">
                 <a href="/prediksi" class="back">Kembali</a>
                 <a href="/" class="back-menu">Menu Home</a>
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const penyakit = "{{ hasil.nama|lower }}"; 
-            if (penyakit === "african swine fever atau demam babi afrika" || penyakit === "hog cholera") {
-                const alertDiv = document.getElementById("alert");
-                alertDiv.style.display = "block";
-                setTimeout(() => {
-                    alertDiv.style.display = "none";
-                }, 30000); 
-            }
-        });
+    <script id="data-penyakit" type="application/json">
+        {{ hasil | tojson }}
     </script>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const raw = document.getElementById("data-penyakit").textContent;
+    const penyakitList = JSON.parse(raw);
+
+    console.log("Data penyakit:", penyakitList);
+
+    const berbahaya = penyakitList.some(p => {
+      const nama = p.nama.toLowerCase();
+      return nama.includes("african swine fever atau demam babi afrika") ||
+             nama.includes("hog cholera");
+    });
+
+    if (berbahaya) {
+      const alertDiv = document.getElementById("alert");
+      alertDiv.style.display = "block";
+      setTimeout(() => {
+        alertDiv.style.display = "none";
+      }, 30000);
+    }
+  });
+</script>
+
+
 </body>
 </html>

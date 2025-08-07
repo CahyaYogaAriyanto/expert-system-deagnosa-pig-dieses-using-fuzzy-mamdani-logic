@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Riwayat Diagnosa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #009578;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #009578;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/prediksi" class="back-btn">← Kembali ke Form Diagnosa</a>
+        <h2>Riwayat Diagnosa</h2>
+        {% if hasil %}
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Gejala</th>
+                    <th>Penyakit</th>
+                    <th>Persentase</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in hasil %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.gejala }}</td>
+                    <td>{{ item.nama_penyakit }}</td>
+                    <td>{{ item.skor }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Tidak ada riwayat diagnosa.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
