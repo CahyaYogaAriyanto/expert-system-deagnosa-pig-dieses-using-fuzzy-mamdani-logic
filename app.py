@@ -1,8 +1,9 @@
+
 from io import BytesIO
+import locale
 from flask import Flask, render_template, request,flash,session,redirect,url_for,Response,jsonify
 import requests
 from PIL import Image
-import numpy as np
 import os
 from fuzzy_logic import proses_logika_fuzzy,ambil_gejala_dari_db,buat_basis_pengetahuan
 import json
@@ -10,6 +11,7 @@ from supabase import create_client, Client
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit, join_room 
 import uuid
+from datetime import datetime
 
 app = Flask(__name__)
  
@@ -32,6 +34,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 def home():
     return render_template('home.html')
 
+
 @app.route('/login')
 def data():
     return render_template('login.html')
@@ -46,6 +49,40 @@ def prediksi():
     sorted_gejala = sorted(response.data, key=lambda x: x['kode_gejala'])
     return render_template('prediksi.html', rules=sorted_gejala)
     # return redirect(url_for('not_login'))
+
+def format_tanggal_indonesia(tanggal_str):
+    if not tanggal_str:  # kalau None atau kosong
+        return "Tanggal tidak tersedia"
+
+    hari_mapping = {
+        "Monday": "Senin", "Tuesday": "Selasa", "Wednesday": "Rabu",
+        "Thursday": "Kamis", "Friday": "Jumat", "Saturday": "Sabtu", "Sunday": "Minggu"
+    }
+    bulan_mapping = {
+        "January": "Januari", "February": "Februari", "March": "Maret", "April": "April",
+        "May": "Mei", "June": "Juni", "July": "Juli", "August": "Agustus",
+        "September": "September", "October": "Oktober", "November": "November", "December": "Desember"
+    }
+
+    # cek apakah value sudah berupa datetime (bukan string)
+    if isinstance(tanggal_str, datetime):
+        dt = tanggal_str
+    else:
+        try:
+            dt = datetime.strptime(tanggal_str, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            try:
+                dt = datetime.strptime(tanggal_str, "%Y-%m-%d")  # fallback kalau format beda
+            except Exception:
+                return str(tanggal_str)  # kalau gagal total, tampilkan apa adanya
+
+    hari = hari_mapping[dt.strftime("%A")]
+    tanggal = dt.strftime("%d")
+    bulan = bulan_mapping[dt.strftime("%B")]
+    tahun = dt.strftime("%Y")
+
+    return f"{hari}, {tanggal} {bulan} {tahun}"
+
 
 @app.route('/not_login')
 def not_login():
@@ -111,9 +148,9 @@ def hasil():
                     "rekomendasi": "Tidak ada rekomendasi."
                 }
             hasil_tertinggi_list.append(hasil)
-
         # Simpan ke database hanya penyakit tertinggi (index 0)
         penyakit_utama = hasil_tertinggi_list[0]
+        tanggal = datetime.now().strftime("%A, %d %B %Y")
         supabase.table("hasil_diagnosa").insert({
             'id_user': id_user,
             "gejala": ",".join(gejala_aktif),
@@ -122,10 +159,9 @@ def hasil():
             "skor": round(penyakit_utama["skor"], 2),
             "rekomendasi": penyakit_utama["rekomendasi"],
             "nama": nama,
+            "tanggal": tanggal,
         }).execute()
-
     return render_template('hasil.html', hasil=hasil_tertinggi_list, selected=gejala_aktif)
-
 
 @app.route('/about')
 def about():
@@ -661,7 +697,7 @@ def riwayat_user():
 
     return render_template("riwayat.html", hasil=hasil)
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET'])
 def logout():
     session.clear() 
     return redirect(url_for('home')) 
@@ -670,9 +706,54 @@ def logout():
 def inject_request():
     return dict(request=request)
 
+@app.route('/dashboard_user')
+def dashboard():
+
+    username = session.get("nama", "Guest User")
+    user_id= session.get('id_user')
+    result = supabase.table("hasil_diagnosa").select("id").eq("id_user", user_id).execute()
+    result_chat = supabase.table("chat_messages").select("id").eq("sender", username).execute()
+    jumlah_chat = len(result_chat.data) if result_chat.data else 0
+    # Hitung jumlah diagnosa
+    jumlah_diagnosa = len(result.data) if result.data else 0
+    email = supabase.table("pengguna").select("email").eq("id_user", user_id).execute()
+    email_data = email.data[0]["email"] if email.data else "Tidak ada email"
+
+    # riwayat
+    response = supabase.table("hasil_diagnosa").select("*").eq("id_user", user_id).limit(5).execute()
+    riwayat = response.data
+
+    for item in riwayat:
+        item["tanggal"] = format_tanggal_indonesia(item["tanggal"])
+        item["gejala"] = item.get("gejala", "")
+        item["rekomendasi"] = item.get("rekomendasi", "")  
+
+
+    # statistik
+    result_statistik = supabase.table("hasil_diagnosa").select("nama_penyakit").eq("id_user", user_id).execute()
+    statistik_data = result_statistik.data
+
+    # Hitung jumlah tiap penyakit
+    statistik = {}
+    for row in statistik_data:
+        penyakit = row["nama_penyakit"]
+        statistik[penyakit] = statistik.get(penyakit, 0) + 1
+
+    # Hitung total untuk persentase
+    total = sum(statistik.values())
+    statistik_persen = {p: round((jumlah/total)*100, 2) for p, jumlah in statistik.items()}  
+    return render_template('dashUser/ds_user.html',
+                           statistik=statistik_persen,
+                            username = username,
+                            email=email_data, 
+                            riwayat = riwayat,
+                            jumlah_diagnosa =jumlah_diagnosa ,
+                            jumlah_chat = jumlah_chat,
+                            )
+
+
 if __name__ == '__main__':
     import eventlet
     import eventlet.wsgi
     socketio.run(app, debug=True)
-
 

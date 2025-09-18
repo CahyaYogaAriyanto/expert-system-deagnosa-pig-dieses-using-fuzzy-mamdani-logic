@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
   <link rel="stylesheet" href="../static/css/navbar.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </head>
 <body>
-
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-logo">
@@ -22,18 +21,30 @@
     <div class="navbar-toggle" id="navbar-toggle">
       <i class="fas fa-bars"></i>
     </div>
+
     <ul class="navbar-menu" id="navbar-menu">
       <li><a href="/" class="{% if request.path == '/' %}active-clicked{% endif %}">Home</a></li>
       <li><a href="/about" class="{% if request.path == '/about' %}active-clicked{% endif %}">About</a></li>
       <li><a href="/lc_user" class="{% if request.path == '/lc_user' %}active-clicked{% endif %}">Tanya Pakar</a></li>
-      <!-- <li class="last-menu"><a href="/login" class="{% if request.path == '/login' %}active-clicked{% endif %}">Login Admin</a></li> -->
-      <li class="last-menu dropdown">
-        <a href="#" class="dropdown-toggle {% if request.path == '/login' or request.path == '/login_pakar' %}active-clicked{% endif %}" id="loginToggle">Login</a>
-        <ul class="dropdown-menu" id="loginMenu">
-          <li><a href="/login">Login Admin</a></li>
-          <li><a href="/login_pakar">Login Pakar</a></li>
-        </ul>
-      </li>
+
+      {% if session.get('user') %}
+        <!-- Kalau sudah login -->
+        <li class="last-menu">
+          <a href="/dashboard_user" class="{% if request.path == '/dashboard_user' %}active-clicked{% endif %}">
+            <i class="fas fa-user-circle"></i> Dashboard
+          </a>
+        </li>
+      {% else %}
+        <!-- Kalau belum login -->
+        <li class="last-menu dropdown">
+          <a href="#" class="dropdown-toggle {% if request.path == '/login' or request.path == '/login_pakar' or request.path == '/login_user' %}active-clicked{% endif %}" id="loginToggle">Login</a>
+          <ul class="dropdown-menu" id="loginMenu">
+            <li><a href="/login">Login Admin</a></li>
+            <li><a href="/login_pakar">Login Pakar</a></li>
+            <li><a href="/login_user">Login Pengguna</a></li>
+          </ul>
+        </li>
+      {% endif %}
     </ul>
   </nav>
 

@@ -1,36 +1,245 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Diperlukan</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Diperlukan - Akses Fitur Eksklusif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        secondary: '#3a0ca3',
+                        accent: '#f72585',
+                        light: '#f8f9fa',
+                        dark: '#212529',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'waving-hand': 'wave 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        wave: {
+                            '0%': { transform: 'rotate(0.0deg)' },
+                            '10%': { transform: 'rotate(14deg)' },
+                            '20%': { transform: 'rotate(-8deg)' },
+                            '30%': { transform: 'rotate(14deg)' },
+                            '40%': { transform: 'rotate(-4deg)' },
+                            '50%': { transform: 'rotate(10.0deg)' },
+                            '60%': { transform: 'rotate(0.0deg)' },
+                            '100%': { transform: 'rotate(0.0deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .character {
+            transition: all 0.3s ease;
+        }
+        
+        .login-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            color: #4361ee;
+        }
+        
+        .hand-wave {
+            animation-name: wave;
+            animation-duration: 2.5s;
+            animation-iteration-count: infinite;
+            transform-origin: 70% 70%;
+            display: inline-block;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
+        <!-- Illustration Section -->
+        <div class="flex flex-col items-center justify-center">
+            <div class="relative mb-8">
+                <div class="character animate-float">
+                    <!-- SVG Illustration of a person pointing to login -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" class="w-full h-auto max-w-md">
+                        <!-- Background elements -->
+                        <circle cx="250" cy="250" r="240" fill="#f8f9fa" stroke="#4361ee" stroke-width="2" stroke-dasharray="8 4" />
+                        
+                        <!-- Person -->
+                        <g class="character-body">
+                            <!-- Head -->
+                            <circle cx="250" cy="150" r="50" fill="#FFDBAC" stroke="#D2A679" stroke-width="2" />
+                            
+                            <!-- Body -->
+                            <path d="M230 200 Q250 240 270 200 L270 280 Q250 320 230 280 Z" fill="#4361ee" stroke="#3a0ca3" stroke-width="2" />
+                            
+                            <!-- Arms -->
+                            <path d="M230 220 L180 250 L160 230" fill="none" stroke="#FFDBAC" stroke-width="8" stroke-linecap="round" />
+                            <path d="M270 220 L320 180 L340 160" fill="none" stroke="#FFDBAC" stroke-width="8" stroke-linecap="round" />
+                            
+                            <!-- Legs -->
+                            <path d="M230 280 L220 350 L210 355" fill="none" stroke="#3a0ca3" stroke-width="8" stroke-linecap="round" />
+                            <path d="M270 280 L280 350 L290 355" fill="none" stroke="#3a0ca3" stroke-width="8" stroke-linecap="round" />
+                            
+                            <!-- Facial features -->
+                            <circle cx="235" cy="140" r="5" fill="#333" />
+                            <circle cx="265" cy="140" r="5" fill="#333" />
+                            <path d="M240 160 Q250 170 260 160" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" />
+                            
+                            <!-- Waving hand -->
+                            <path d="M340 160 L360 140 L355 120 L375 110 L365 90 L340 100 L345 120 Z" fill="#FFDBAC" class="hand-wave" />
+                            
+                            <!-- Thought bubble -->
+                            <path d="M330 100 C300 80, 280 50, 250 50 C220 50, 200 80, 170 100 C160 70, 130 50, 100 50 C60 50, 30 80, 30 120 C30 160, 60 190, 100 190 C130 190, 160 170, 170 140 C180 160, 200 170, 220 160 C230 180, 250 190, 270 180 C290 200, 310 190, 320 170 L330 160 Z" fill="white" stroke="#ddd" stroke-width="2" />
+                            <path d="M320 170 L340 180 L330 160" fill="white" />
+                            
+                            <!-- Login icon in thought bubble -->
+                            <circle cx="150" cy="100" r="20" fill="#4361ee" stroke="#3a0ca3" stroke-width="2" />
+                            <path d="M140 90 L160 90 L160 110 L140 110 Z" fill="white" />
+                            <circle cx="150" cy="85" r="5" fill="white" />
+                        </g>
+                        
+                        <!-- Arrow pointing to login -->
+                        <path d="M320 180 L400 150 L390 130 L410 140 L420 120 L400 110 L390 130" fill="#f72585" class="pulse" />
+                        <text x="420" y="120" font-family="Poppins" font-size="12" fill="#f72585">Login dulu!</text>
+                    </svg>
+                </div>
+                
+                <!-- Animated circles in background -->
+                <div class="absolute -top-4 -left-4 w-32 h-32 rounded-full bg-blue-200 opacity-50 animate-bounce delay-100"></div>
+                <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-purple-200 opacity-50 animate-bounce delay-300"></div>
+                <div class="absolute top-1/2 -right-8 w-16 h-16 rounded-full bg-pink-200 opacity-50 animate-bounce delay-500"></div>
+            </div>
+            
+            <div class="text-center max-w-md">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Nikmati Pengalaman Lebih Personal</h2>
+                <p class="text-gray-600">Dengan login, Anda dapat mengakses semua fitur eksklusif kami dan menikmati pengalaman yang dipersonalisasi sesuai kebutuhan Anda.</p>
+            </div>
+        </div>
+        
+        <!-- Login Form Section -->
+        <div class="login-card bg-white rounded-xl p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Akses Dibatasi</h1>
+                <p class="text-gray-600">Anda perlu login terlebih dahulu untuk mengakses konten ini</p>
+            </div>
+            
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Fitur yang akan Anda dapatkan:</h2>
+                
+                <div class="space-y-4">
+                    <div class="feature-item flex items-center p-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition cursor-pointer">
+                        <div class="feature-icon bg-blue-100 p-3 rounded-full mr-4 text-blue-600">
+                            <i class="fas fa-chart-line text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800">Analitik Lengkap</h3>
+                            <p class="text-sm text-gray-600">Akses data dan analisis performa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item flex items-center p-3 rounded-lg bg-purple-50 hover:bg-purple-100 transition cursor-pointer">
+                        <div class="feature-icon bg-purple-100 p-3 rounded-full mr-4 text-purple-600">
+                            <i class="fas fa-cog text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800">Kustomisasi</h3>
+                            <p class="text-sm text-gray-600">Personalisasi pengalaman Anda</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item flex items-center p-3 rounded-lg bg-green-50 hover:bg-green-100 transition cursor-pointer">
+                        <div class="feature-icon bg-green-100 p-3 rounded-full mr-4 text-green-600">
+                            <i class="fas fa-save text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800">Penyimpanan Data</h3>
+                            <p class="text-sm text-gray-600">Simpan progres dan preferensi Anda</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="{{ url_for('login_user') }}" class="inline-block bg-primary hover:bg-secondary text-white font-bold py-3 px-6 rounded-full transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl w-full mb-4">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login Sekarang
+                </a>
+                
+                <p class="text-gray-600 text-sm">
+                    Belum punya akun? 
+                    <a href="{{ url_for('daftar_user') }}" class="text-primary hover:text-secondary font-medium">Daftar di sini</a>
+                </p>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <p class="text-center text-gray-500 text-sm">
+                    <i class="fas fa-lock mr-1"></i> Data Anda akan terlindungi dengan aman
+                </p>
+            </div>
+        </div>
+    </div>
 
-  <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center animate-fade-in">
-    <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Login Icon" class="w-20 h-20 mx-auto mb-4 opacity-80">
-    
-    <h1 class="text-2xl font-semibold text-gray-800 mb-2">Akses Ditolak</h1>
-    <p class="text-gray-600 mb-6">Anda harus login terlebih dahulu untuk mengakses halaman ini.</p>
-    
-    <a href="{{ url_for('login_user') }}" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
-      Login Sekarang
-    </a>
-
-    <p class="mt-4 text-sm text-gray-400">Belum punya akun? <a href="{{ url_for('daftar_user') }}" class="text-green-600 hover:underline">Daftar</a></p>
-  </div>
-
-  <style>
-    @keyframes fade-in {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .animate-fade-in {
-      animation: fade-in 0.5s ease-out;
-    }
-  </style>
-
+    <script>
+        // Menambahkan interaktivitas tambahan
+        document.addEventListener('DOMContentLoaded', function() {
+            const character = document.querySelector('.character-body');
+            
+            // Animasi saat hover pada karakter
+            character.addEventListener('mouseover', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            character.addEventListener('mouseout', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
+            // Efek parallax sederhana
+            document.addEventListener('mousemove', function(e) {
+                const moveX = (e.clientX - window.innerWidth / 2) / 50;
+                const moveY = (e.clientY - window.innerHeight / 2) / 50;
+                
+                character.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+    </script>
 </body>
 </html>
