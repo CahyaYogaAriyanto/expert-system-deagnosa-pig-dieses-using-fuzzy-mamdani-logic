@@ -379,24 +379,26 @@
                 console.log("Memperbarui statistik dashboard...");
             }
         });
-    // chat pakar ke user
     const socket = io();
-    const username = "{{ username }}"; // dari backend
-    let currentPakar = null;
+    const userId = "{{ pakar_id }}";   // dari backend session
+    let currentPakarId = null;
+    let currentPakarName = null;
 
     const chatBox = document.getElementById("chat-messages");
     const chatWithEl = document.getElementById("chat-with");
 
-    function appendMessage(sender, message, time = null) {
+    // Tampilkan pesan di chatbox
+    function appendMessage(senderId, message, time = null) {
+    const isMine = senderId === userId;
     const msgDiv = document.createElement("div");
-    msgDiv.className = `flex mb-3 ${sender === username ? 'justify-end' : 'justify-start'}`;
+    msgDiv.className = `flex mb-3 ${isMine ? 'justify-end' : 'justify-start'}`;
 
     msgDiv.innerHTML = `
-        <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === username
+        <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${isMine
         ? 'bg-blue-600 text-white rounded-br-sm'
         : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
         <p>${message}</p>
-        <span class="block text-xs mt-1 ${sender === username ? 'text-white/70 text-right' : 'text-gray-500'}">
+        <span class="block text-xs mt-1 ${isMine ? 'text-white/70 text-right' : 'text-gray-500'}">
             ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
         </span>
         </div>`;
@@ -404,28 +406,30 @@
     chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    // Kirim pesan
     function sendMessage() {
     const msgInput = document.getElementById("msg");
     const message = msgInput.value.trim();
-    if (message && currentPakar) {
-        socket.emit("user_message", { username, receiver: currentPakar, message });
-        appendMessage(username, message);
+    if (message && currentPakarId) {
+        socket.emit("user_message", { sender_id: userId, receiver_id: currentPakarId, message });
+        appendMessage(userId, message);
         msgInput.value = "";
     }
     }
 
-    function loadHistory(pakarNama) {
+    // Load riwayat chat
+    function loadHistory(pakarId, pakarName) {
     chatBox.innerHTML = `<div class="text-gray-500 text-sm">Memuat riwayat chat...</div>`;
 
-    fetch(`/chat_history?pakar=${encodeURIComponent(pakarNama)}&user=${encodeURIComponent(username)}`)
+    fetch(`/chat_history?pakar_id=${encodeURIComponent(pakarId)}&user_id=${encodeURIComponent(userId)}`)
         .then(res => res.json())
         .then(data => {
         chatBox.innerHTML = "";
         if (data.length === 0) {
-            chatBox.innerHTML = `<div class="text-gray-500 text-sm">Belum ada percakapan dengan ${pakarNama}</div>`;
+            chatBox.innerHTML = `<div class="text-gray-500 text-sm">Belum ada percakapan dengan ${pakarName}</div>`;
         } else {
             data.forEach(msg => {
-            appendMessage(msg.sender, msg.message, msg.created_at);
+            appendMessage(msg.sender_id, msg.message, msg.created_at);
             });
         }
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -433,7 +437,7 @@
     }
 
     // Load daftar pakar
-    fetch("/user_list")
+    fetch("/pakar_list")
     .then(res => res.json())
     .then(data => {
         const list = document.getElementById("pakar-list");
@@ -466,24 +470,28 @@
             item.querySelector(".pakar-nama").classList.add("text-green-600");
 
             // ganti target chat
-            currentPakar = pakar.nama;
+            currentPakarId = pakar.id;
+            currentPakarName = pakar.nama;
             chatWithEl.textContent = pakar.nama;
 
             // load riwayat chat
-            loadHistory(pakar.nama);
+            loadHistory(pakar.id, pakar.nama);
         });
 
         list.appendChild(item);
         });
     });
 
+    // Terima pesan dari server
     socket.on("user_receive", data => {
-    appendMessage(data.sender, data.message, data.time || null);
+    appendMessage(data.sender_id, data.message, data.time || null);
     });
 
+    // Join socket
     window.onload = () => {
-    socket.emit("join", { username });
+    socket.emit("join", { user_id: userId });
     };
+
   </script>
 </body>
 </html>

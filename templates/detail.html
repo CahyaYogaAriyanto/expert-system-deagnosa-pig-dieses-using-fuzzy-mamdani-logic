@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat dengan Pakar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div id="chat" class="page">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Sidebar -->
+    <div class="card p-4 lg:col-span-1 bg-white rounded shadow">
+      <div class="relative mb-4">
+        <input type="text" placeholder="Cari pakar..."
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+      </div>
+      <div id="pakar-list" class="space-y-3"></div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="card p-4 lg:col-span-2 bg-white rounded shadow">
+      <!-- header -->
+      <div class="flex items-center border-b pb-4 mb-4">
+        <img id="pakar-avatar" src="https://ui-avatars.com/api/?name=Pakar"
+        class="w-10 h-10 rounded-full mr-3" alt="Pakar">
+        <div>
+          <h3 id="pakar-nama" class="font-semibold">Pilih pakar</h3>
+          <p id="pakar-spesialis" class="text-gray-500 text-sm">-</p>
+        </div>
+      </div>
+
+      <!-- chat messages -->
+      <div class="chat-container mb-4 h-96 overflow-y-auto" id="chat-messages"></div>
+
+      <!-- input -->
+      <div class="flex items-center border-t pt-4">
+        <input type="text" id="msg" placeholder="Ketik pesan..."
+        class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button onclick="sendMessage()"
+        class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
+        <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const socket = io();
+const username = "{{ session['username'] }}";
+const chatBox = document.getElementById("chat-messages");
+
+window.addEventListener("load", () => {
+    socket.emit("join", { username });
+    loadPakarList();
+});
+
+async function loadPakarList() {
+    const res = await fetch("/pakar_list");
+    const data = await res.json();
+    const pakarList = document.getElementById("pakar-list");
+    pakarList.innerHTML = "";
+
+    data.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "flex items-center p-3 bg-blue-50 rounded-lg cursor-pointer";
+        div.innerHTML = `
+        <img src="${p.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(p.nama)}"
+            class="w-12 h-12 rounded-full mr-3" alt="${p.nama}">
+        <div>
+            <h3 class="font-semibold">${p.nama}</h3>
+            <p class="text-gray-500 text-sm">${p.spesialisasi || ''}</p>
+            <div class="flex items-center mt-1">
+                <div class="w-2 h-2 ${p.status_online ? 'bg-green-500' : 'bg-gray-400'} rounded-full mr-1"></div>
+                <span class="text-xs text-gray-500">${p.status_online ? 'Online' : 'Offline'}</span>
+            </div>
+        </div>`;
+        div.onclick = () => selectPakar(p);
+        pakarList.appendChild(div);
+    });
+}
+
+let currentPakar = null;
+function selectPakar(pakar) {
+    currentPakar = pakar;
+    document.getElementById("pakar-avatar").src = pakar.avatar || "https://ui-avatars.com/api/?name=" + encodeURIComponent(pakar.nama);
+    document.getElementById("pakar-nama").innerText = pakar.nama;
+    document.getElementById("pakar-spesialis").innerHTML =
+        (pakar.spesialisasi || "") + " · " + (pakar.status_online ? '<span class="text-green-500">Online</span>' : 'Offline');
+    loadChatHistory(pakar.id);
+}
+
+function sendMessage() {
+    const msgInput = document.getElementById("msg");
+    const message = msgInput.value.trim();
+    if (message && username && currentPakar) {
+        socket.emit("user_message", { username, message, receiver: currentPakar.id });
+        appendMessage("user", message);
+        msgInput.value = "";
+    }
+}
+
+function loadChatHistory(pakarId) {
+    fetch(`/chat_data/${pakarId}`)
+        .then(res => res.json())
+        .then(data => {
+            chatBox.innerHTML = "";
+            data.forEach(row => appendMessage(row.sender === username ? "user" : "expert", row.message, row.created_at));
+        });
+}
+
+function appendMessage(sender, message, time = null) {
+    const div = document.createElement("div");
+    div.className = sender === "user" ? "text-right mb-2" : "text-left mb-2";
+    div.innerHTML = `
+        <div class="${sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} 
+                    inline-block px-3 py-2 rounded-lg max-w-xs">
+            ${message}
+        </div>
+        ${time ? `<div class="text-xs text-gray-400 mt-1">${new Date(time).toLocaleTimeString()}</div>` : ""}
+    `;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// menerima pesan realtime dari pakar
+socket.on("receive_message", data => {
+    if(currentPakar && data.sender === currentPakar.id){
+        appendMessage("expert", data.message);
+    }
+});
+</script>
+</body>
+</html>

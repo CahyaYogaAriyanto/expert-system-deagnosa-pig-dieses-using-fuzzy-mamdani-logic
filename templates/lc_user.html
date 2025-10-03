@@ -2,199 +2,108 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>live chat Pengguna</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #f7f7f8;
-      height: 90vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    
-    .chat-container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-      height: 95%;
-    }
-
-
-    .chat-box {
-    width: 100%;
-    max-width: 900px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Tambahkan ini */
-    overflow: hidden;
-  }
-
-    .chat-header {
-      background-color: #f5f8f7;
-      color: rgb(0, 0, 0);
-      padding: 16px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto; 
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      background-color: #f9fafb;
-      max-height: calc(100vh - 170px); 
-    }
-
-    .message {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-    .message {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-
-    .user {
-      align-self: flex-end;
-      background-color: #685fe5;
-      color: white;
-      border-bottom-right-radius: 0;
-    }
-
-    .admin {
-      align-self: flex-start;
-      background-color: #e5e7eb;
-      color: #111827;
-      border-bottom-left-radius: 0;
-    }
-
-    .chat-input {
-      border-top: 1px solid #ddd;
-      padding: 16px;
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .chat-input .input-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .chat-input input[type="text"] {
-      padding: 10px;
-      font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      width: 100%;
-    }
-
-    .chat-input button {
-      background-color: #10a37f;
-      color: white;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.2s;
-    }
-
-    .chat-input button:hover {
-      background-color: #0e8e6a;
-    }
-
-    @media (max-width: 600px) {
-      .chat-box {
-        border-radius: 0;
-        height: 100%;
-      }
-
-      .chat-container {
-        padding: 0;
-      }
-    }
-  </style>
+  <title>Live Chat User</title>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-{% include "navbar.html" %}
-<body>
-  <div class="chat-container">
-    <div class="chat-box">
-      <div class="chat-header">Obrolan dengan Pakar</div>
-      <div class="chat-messages" id="chat"></div>
-      <div class="chat-input">
-        <div class="input-row">
-          <input type="text" id="msg" placeholder="Tulis pesan..." />
-          <button onclick="sendMessage()">Kirim</button>
-        </div>
-      </div>
+<body class="bg-gray-100 h-screen flex">
+  <!-- Sidebar Pakar -->
+  <div class="w-1/3 bg-white shadow-lg flex flex-col">
+    <div class="p-4 border-b">
+      <h2 class="text-lg font-semibold">Daftar Pakar</h2>
+    </div>
+    <div id="pakar-list" class="flex-1 overflow-y-auto"></div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="flex-1 flex flex-col bg-white shadow-lg ml-2 rounded-lg">
+    <!-- Header -->
+    <div class="p-4 border-b bg-blue-600 text-white rounded-t-lg">
+      <h2 class="text-lg font-semibold">Chat dengan <span id="chat-with">-</span></h2>
+      <p class="text-sm">User: <span id="user-name">{{ username }}</span></p>
+    </div>
+
+    <!-- Chat box -->
+    <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-2 bg-gray-50"></div>
+
+    <!-- Input pesan -->
+    <div class="p-4 border-t flex gap-2">
+      <input id="message" type="text" placeholder="Tulis pesan..."
+             class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200">
+      <button id="send" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Kirim</button>
     </div>
   </div>
 
-  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
   <script>
+    const username = "{{ username }}";
+    let currentPakar = null;
     const socket = io();
-    const username = "{{ username }}"; // ambil dari session flask
-    const chat = document.getElementById('chat');
 
-    function appendMessage(sender, message) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `message ${sender}`;
-      msgDiv.textContent = message;
-      chat.appendChild(msgDiv);
-      chat.scrollTop = chat.scrollHeight;
-    }
+    socket.emit("join", { username });
 
-    function sendMessage() {
-      const msgInput = document.getElementById('msg');
-      const message = msgInput.value.trim();
-      if (message && username) {
-        socket.emit('user_message', { username, message });
-        appendMessage("user", message);
-        msgInput.value = '';
-      }
-    }
+    const chatBox = document.getElementById("chat-box");
+    const sendBtn = document.getElementById("send");
+    const msgInput = document.getElementById("message");
+    const chatWithEl = document.getElementById("chat-with");
 
-    function loadChatHistory() {
-      fetch('/chat_data')
-        .then(res => res.json())
-        .then(data => {
-          const riwayat = data.filter(row =>
-            (row.sender === username && row.receiver === 'admin') ||
-            (row.sender === 'admin' && row.receiver === username)
-          );
-
-          riwayat.forEach(row => {
-            appendMessage(row.sender === username ? 'user' : 'admin', row.message);
+    // Ambil daftar pakar
+    fetch("/pakar_list")
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("pakar-list");
+        data.forEach(pakar => {
+          const item = document.createElement("div");
+          item.className = "p-4 border-b hover:bg-gray-100 cursor-pointer";
+          item.innerHTML = `<div class="font-semibold">${pakar.nama}</div>
+                            <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>`;
+          item.addEventListener("click", () => {
+            currentPakar = pakar.nama;
+            chatWithEl.textContent = pakar.nama;
+            loadHistory(pakar.nama);
           });
+          list.appendChild(item);
+        });
+      });
+
+    // Load history chat
+    function loadHistory(pakar) {
+      fetch(`/chat_history/${pakar}`)
+        .then(res => res.json())
+        .then(chats => {
+          chatBox.innerHTML = "";
+          chats.forEach(c => {
+            if (c.sender === username) {
+              chatBox.innerHTML += `<div class="text-right">
+                <span class="inline-block bg-blue-500 text-white px-3 py-1 rounded-lg">${c.message}</span>
+              </div>`;
+            } else {
+              chatBox.innerHTML += `<div class="text-left">
+                <span class="inline-block bg-gray-300 px-3 py-1 rounded-lg"><b>${c.sender}:</b> ${c.message}</span>
+              </div>`;
+            }
+          });
+          chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
 
-    window.addEventListener('load', () => {
-      if (username) {
-        socket.emit('join', { username });
-        loadChatHistory(); // ⬅️ Ambil riwayat dari Supabase
+    // Kirim pesan
+    sendBtn.addEventListener("click", () => {
+      const message = msgInput.value.trim();
+      if (!message || !currentPakar) {
+        alert("Pilih pakar dan isi pesan!");
+        return;
       }
+      socket.emit("user_message", { sender: username, receiver: currentPakar, message });
+      msgInput.value = "";
     });
 
-    socket.on('user_receive', data => {
-      appendMessage("admin", data.message);
+    // Terima pesan
+    socket.on("user_receive", data => {
+      if (data.pakar === username) return; // skip pesan echo
+      chatBox.innerHTML += `<div class="text-left">
+        <span class="inline-block bg-gray-300 px-3 py-1 rounded-lg"><b>${data.pakar}:</b> ${data.message}</span>
+      </div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
     });
   </script>
 </body>

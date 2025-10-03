@@ -195,8 +195,8 @@
     <div class="sidebar text-white p-4">
         <div class="flex items-center justify-between mb-10">
             <div class="flex items-center">
-                <i class="fas fa-brain text-2xl mr-3"></i>
-                <span class="logo-text font-bold text-xl">SehatMind</span>
+                <img src="../static/img/logo-babi.png" class="w-8 h-8 mr-3"></img>
+                <span class="logo-text font-bold text-xl">Pig Friends</span>
             </div>
         </div>
         
@@ -454,57 +454,7 @@
                     class="mt-6 w-full py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition inline-block text-center">
                         <i class="fas fa-file-medical mr-2"></i> Buat Diagnosa Baru
                     </a>
-                </div>
-                
-                <!-- Chat dengan Pakar -->
-                <div class="card p-6 lg:col-span-2">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Chat dengan Pakar</h2>
-                        <a href="#" class="text-blue-600 text-sm">Lihat Semua</a>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="border rounded-lg p-4 flex items-center">
-                            <img src="https://ui-avatars.com/api/?name=Dr+Anna&background=random" class="w-12 h-12 rounded-full mr-3" alt="Dr. Anna">
-                            <div>
-                                <h3 class="font-semibold">Dr. Anna</h3>
-                                <p class="text-gray-500 text-sm">Psikolog Klinis</p>
-                                <div class="flex items-center mt-1">
-                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
-                                    <span class="text-xs text-gray-500">Online</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="border rounded-lg p-4 flex items-center">
-                            <img src="https://ui-avatars.com/api/?name=Dr+Budi&background=random" class="w-12 h-12 rounded-full mr-3" alt="Dr. Budi">
-                            <div>
-                                <h3 class="font-semibold">Dr. Budi</h3>
-                                <p class="text-gray-500 text-sm">Psikiater</p>
-                                <div class="flex items-center mt-1">
-                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
-                                    <span class="text-xs text-gray-500">Online</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="border rounded-lg p-4 flex items-center">
-                            <img src="https://ui-avatars.com/api/?name=Dr+Citra&background=random" class="w-12 h-12 rounded-full mr-3" alt="Dr. Citra">
-                            <div>
-                                <h3 class="font-semibold">Dr. Citra</h3>
-                                <p class="text-gray-500 text-sm">Terapis</p>
-                                <div class="flex items-center mt-1">
-                                    <div class="w-2 h-2 bg-red-500 rounded-full mr-1"></div>
-                                    <span class="text-xs text-gray-500">Offline</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="mt-6 w-full py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition" data-page="chat">
-                        <i class="fas fa-comment-medical mr-2"></i> Mulai Chat Baru
-                    </button>
-                </div>
+                </div>    
             </div>
         </div>
         <!-- Riwayat Diagnosa Page -->
@@ -589,62 +539,47 @@
     </div>
     <!-- Chat dengan Pakar -->
     <div id="chat" class="page">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Sidebar list pakar -->
-            <div class="card p-4 lg:col-span-1">
-            <div class="relative mb-4">
-                <input type="text" placeholder="Cari pakar..."
-                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-            </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Sidebar list pakar -->
+        <div class="card p-4 lg:col-span-1">
+        <div class="relative mb-4">
+            <input type="text" placeholder="Cari pakar..."
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+        </div>
 
-            <div class="space-y-3">
-                <!-- contoh 1 pakar -->
-                <div class="flex items-center p-3 bg-blue-50 rounded-lg cursor-pointer">
-                <img src="https://ui-avatars.com/api/?name=Dr+Anna&background=random"
-                    class="w-12 h-12 rounded-full mr-3" alt="Dr. Anna">
-                <div>
-                    <h3 class="font-semibold">Dr. Anna</h3>
-                    <p class="text-gray-500 text-sm">Psikolog Klinis</p>
-                    <div class="flex items-center mt-1">
-                    <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
-                    <span class="text-xs text-gray-500">Online</span>
-                    </div>
-                </div>
-                </div>
-                <!-- tambahkan pakar lain di sini -->
-            </div>
-            </div>
+        <!-- LIST PAKAR -->
+        <div id="pakar-list" class="space-y-3 overflow-y-auto"></div>
+        </div>
 
-            <!-- Chat area -->
-            <div class="card p-4 lg:col-span-2">
-            <!-- header chat -->
-            <div class="flex items-center border-b pb-4 mb-4">
-                <img src="https://ui-avatars.com/api/?name=Dr+Anna&background=random"
-                class="w-10 h-10 rounded-full mr-3" alt="Dr. Anna">
-                <div>
-                <h3 class="font-semibold">Dr. Anna</h3>
-                <p class="text-gray-500 text-sm">Psikolog Klinis · <span class="text-green-500">Online</span></p>
-                </div>
-            </div>
+        <!-- Chat area -->
+        <div class="card p-4 lg:col-span-2">
+        <!-- header chat -->
+        <div class="flex items-center border-b pb-4 mb-4">
+            <h2 id="chat-with" class="font-semibold text-lg text-gray-700">
+            Pilih pakar untuk mulai chat
+            </h2>
+        </div>
 
-            <!-- isi pesan -->
-            <div class="chat-container mb-4" id="chat-messages" style="max-height: 400px; overflow-y: auto;">
-                <!-- pesan akan di-append lewat JS -->
-            </div>
+        <!-- isi pesan -->
+        <div class="chat-container mb-4" id="chat-messages"
+            style="max-height: 400px; overflow-y: auto;">
+            <!-- pesan akan muncul di sini -->
+        </div>
 
-            <!-- input pesan -->
-            <div class="flex items-center border-t pt-4">
-                <input type="text" id="msg" placeholder="Ketik pesan..."
-                class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="sendMessage()"
-                class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
-                <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-            </div>
+        <!-- input pesan -->
+        <div class="flex items-center border-t pt-4">
+            <input type="text" id="msg" placeholder="Ketik pesan..."
+            class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="sendMessage()"
+            class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
+            <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
         </div>
     </div>
+    </div>
+
     <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -701,8 +636,6 @@
                     }
                 });
             });
-            
-            // Simulasi data dinamis (dalam aplikasi Flask, data ini akan berasal dari backend)
             updateDashboardStats();
             
             function updateDashboardStats() {
@@ -710,63 +643,230 @@
                 console.log("Memperbarui statistik dashboard...");
             }
         });
+//     // chat user
+//     const socket = io();
+//     const username = "{{ username }}"; // ambil dari session Flask
+//     const chatBox = document.getElementById("chat-messages");
+
+//     function appendMessage(sender, message, time = null) {
+//         const msgDiv = document.createElement("div");
+//         msgDiv.className = `flex mb-3 ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+
+//         msgDiv.innerHTML = `
+//             <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === 'user'
+//                 ? 'bg-blue-600 text-white rounded-br-sm'
+//                 : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
+//                 <p>${message}</p>
+//                 <span class="block text-xs mt-1 ${sender === 'user' ? 'text-white/70 text-right' : 'text-gray-500'}">
+//                     ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+//                 </span>
+//             </div>
+//         `;
+
+//         chatBox.appendChild(msgDiv);
+//         chatBox.scrollTop = chatBox.scrollHeight;
+//     }
+
+//     function sendMessage() {
+//         const msgInput = document.getElementById("msg");
+//         const message = msgInput.value.trim();
+//         if (message && username) {
+//         socket.emit("user_message", { username, message });
+//         appendMessage("user", message);
+//         msgInput.value = "";
+//         }
+//     }
+
+//     function loadChatHistory() {
+//         fetch("/chat_data")
+//         .then(res => res.json())
+//         .then(data => {
+//             const riwayat = data.filter(row =>
+//             (row.sender === username && row.receiver === 'admin') ||
+//             (row.sender === 'admin' && row.receiver === username)
+//             );
+//             riwayat.forEach(row => {
+//             appendMessage(row.sender === username ? 'user' : 'expert', row.message, row.created_at);
+//             });
+//         });
+//     }
+
+//     window.addEventListener("load", () => {
+//         if (username) {
+//         socket.emit("join", { username });
+//         loadChatHistory();
+//         }
+//     });
+
+//     socket.on("user_receive", data => {
+//         appendMessage("expert", data.message);
+//     });
+
+//     let currentPakar = null;
+//     socket.emit("join", { username });
+
+//     // Ambil daftar pakar
+//    fetch("/pakar_list")
+//     .then(res => res.json())
+//     .then(data => {
+//         const list = document.getElementById("pakar-list");
+
+//         // Fungsi buat warna random tapi konsisten per nama
+//         function getColorFromName(name) {
+//         const colors = [
+//             "bg-blue-500", "bg-green-500", "bg-red-500", "bg-yellow-500",
+//             "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500"
+//         ];
+//         let hash = 0;
+//         for (let i = 0; i < name.length; i++) {
+//             hash = name.charCodeAt(i) + ((hash << 5) - hash);
+//         }
+//         return colors[Math.abs(hash) % colors.length];
+//         }
+
+//         data.forEach(pakar => {
+//         // Ambil 2 inisial dari nama
+//         const namaSplit = pakar.nama.trim().split(" ");
+//         let initials = "";
+//         if (namaSplit.length > 1) {
+//             initials = namaSplit[0][0] + namaSplit[1][0];
+//         } else {
+//             initials = pakar.nama.substring(0, 2);
+//         }
+//         initials = initials.toUpperCase();
+
+//         // Pilih warna random tapi konsisten
+//         const colorClass = getColorFromName(pakar.nama);
+
+//         // Buat item list
+//         const item = document.createElement("div");
+//         item.className = "flex items-center gap-3 p-4 border-b hover:bg-gray-100 cursor-pointer";
+//         item.innerHTML = `
+//             <div class="w-10 h-10 flex items-center justify-center rounded-full ${colorClass} text-white font-semibold">
+//             ${initials}
+//             </div>
+//             <div>
+//             <div class="font-semibold">${pakar.nama}</div>
+//             <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
+//             </div>
+//         `;
+
+//         item.addEventListener("click", () => {
+//             currentPakar = pakar.nama;
+//             chatWithEl.textContent = pakar.nama;
+//             loadHistory(pakar.nama);
+//         });
+
+//         list.appendChild(item);
+//         });
+//     });
+
+    // chat user
     const socket = io();
-    const username = "{{ username }}"; // ambil dari session Flask
+    const username = "{{ username }}"; // dari backend
+    let currentPakar = null;
+
     const chatBox = document.getElementById("chat-messages");
+    const chatWithEl = document.getElementById("chat-with");
 
     function appendMessage(sender, message, time = null) {
-        const msgDiv = document.createElement("div");
-        msgDiv.className = `flex mb-3 ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+    const msgDiv = document.createElement("div");
+    msgDiv.className = `flex mb-3 ${sender === username ? 'justify-end' : 'justify-start'}`;
 
-        msgDiv.innerHTML = `
-            <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === 'user'
-                ? 'bg-blue-600 text-white rounded-br-sm'
-                : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
-                <p>${message}</p>
-                <span class="block text-xs mt-1 ${sender === 'user' ? 'text-white/70 text-right' : 'text-gray-500'}">
-                    ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-            </div>
-        `;
-
-        chatBox.appendChild(msgDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
+    msgDiv.innerHTML = `
+        <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === username
+        ? 'bg-blue-600 text-white rounded-br-sm'
+        : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
+        <p>${message}</p>
+        <span class="block text-xs mt-1 ${sender === username ? 'text-white/70 text-right' : 'text-gray-500'}">
+            ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+        </span>
+        </div>`;
+    chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function sendMessage() {
-        const msgInput = document.getElementById("msg");
-        const message = msgInput.value.trim();
-        if (message && username) {
-        socket.emit("user_message", { username, message });
-        appendMessage("user", message);
+    const msgInput = document.getElementById("msg");
+    const message = msgInput.value.trim();
+    if (message && currentPakar) {
+        socket.emit("user_message", { username, receiver: currentPakar, message });
+        appendMessage(username, message);
         msgInput.value = "";
-        }
+    }
     }
 
-    function loadChatHistory() {
-        fetch("/chat_data")
+    function loadHistory(pakarNama) {
+    chatBox.innerHTML = `<div class="text-gray-500 text-sm">Memuat riwayat chat...</div>`;
+
+    fetch(`/chat_history?pakar=${encodeURIComponent(pakarNama)}&user=${encodeURIComponent(username)}`)
         .then(res => res.json())
         .then(data => {
-            const riwayat = data.filter(row =>
-            (row.sender === username && row.receiver === 'admin') ||
-            (row.sender === 'admin' && row.receiver === username)
-            );
-            riwayat.forEach(row => {
-            appendMessage(row.sender === username ? 'user' : 'expert', row.message, row.created_at);
+        chatBox.innerHTML = "";
+        if (data.length === 0) {
+            chatBox.innerHTML = `<div class="text-gray-500 text-sm">Belum ada percakapan dengan ${pakarNama}</div>`;
+        } else {
+            data.forEach(msg => {
+            appendMessage(msg.sender, msg.message, msg.created_at);
             });
+        }
+        chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
 
-    window.addEventListener("load", () => {
-        if (username) {
-        socket.emit("join", { username });
-        loadChatHistory();
-        }
+    // Load daftar pakar
+    fetch("/pakar_list")
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById("pakar-list");
+        data.forEach(pakar => {
+        const item = document.createElement("div");
+        item.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
+
+        const initials = pakar.nama.split(" ").slice(0, 2).map(n => n[0]).join("").toUpperCase();
+        const colors = ["bg-red-500", "bg-green-500", "bg-blue-500", "bg-purple-500", "bg-yellow-500"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        item.innerHTML = `
+            <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
+            ${initials}
+            </div>
+            <div>
+            <div class="font-semibold pakar-nama">${pakar.nama}</div>
+            <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
+            </div>`;
+
+        item.addEventListener("click", () => {
+            // reset highlight
+            document.querySelectorAll("#pakar-list .p-4").forEach(el => {
+            el.classList.remove("bg-green-100");
+            el.querySelector(".pakar-nama").classList.remove("text-green-600");
+            });
+
+            // tandai pakar terpilih
+            item.classList.add("bg-green-100");
+            item.querySelector(".pakar-nama").classList.add("text-green-600");
+
+            // ganti target chat
+            currentPakar = pakar.nama;
+            chatWithEl.textContent = pakar.nama;
+
+            // load riwayat chat
+            loadHistory(pakar.nama);
+        });
+
+        list.appendChild(item);
+        });
     });
 
     socket.on("user_receive", data => {
-        appendMessage("expert", data.message);
+    appendMessage(data.sender, data.message, data.time || null);
     });
+
+    window.onload = () => {
+    socket.emit("join", { username });
+    };
+
     // riwayat
     function showDetail(item) {
         const data = JSON.parse(item);
@@ -794,6 +894,7 @@
     function closeModal() {
         document.getElementById("modalDetail").classList.add("hidden");
     }
-    </script>
+  </script>
+    
 </body>
 </html>
