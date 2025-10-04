@@ -409,121 +409,175 @@
                 console.log("Memperbarui statistik dashboard...");
             }
         });
-    // chat pakar ke user
-    const socket = io();
-    const username = "{{ username }}"; // dari backend
-    let currentPakar = null;
+      // chat pakar ke user
+          document.addEventListener('DOMContentLoaded', function() {
+              const hamburger = document.querySelector('.hamburger');
+              const sidebar = document.querySelector('.sidebar');
+              const overlay = document.querySelector('.overlay');
+              const mainContent = document.querySelector('.main-content');
+              const menuLinks = document.querySelectorAll('.menu-link');
+              const pages = document.querySelectorAll('.page');
+              const pageTitle = document.querySelector('.page-title');
+              
+              // Menu toggle for mobile
+              hamburger.addEventListener('click', function() {
+                  sidebar.classList.toggle('active');
+                  overlay.classList.toggle('active');
+              });
+              
+              overlay.addEventListener('click', function() {
+                  sidebar.classList.remove('active');
+                  overlay.classList.remove('active');
+              });
+              
+              // Page navigation
+              menuLinks.forEach(link => {
+                  link.addEventListener('click', function(e) {
+                      e.preventDefault();
+                      const targetPage = this.getAttribute('data-page');
+                      
+                      // Update active menu item
+                      menuLinks.forEach(item => {
+                          item.parentElement.classList.remove('active');
+                      });
+                      this.parentElement.classList.add('active');
+                      
+                      // Show target page
+                      pages.forEach(page => {
+                          page.classList.remove('active');
+                      });
+                      document.getElementById(targetPage).classList.add('active');
+                      
+                      // Update page title
+                      const pageTitles = {
+                          'dashboard': 'Dashboard',
+                          'konsultasi': 'Konsultasi',
+                          'riwayat': 'Riwayat Diagnosa',
+                          'chat': 'Chat dengan Pengguna'
+                      };
+                      pageTitle.textContent = pageTitles[targetPage];
+                      
+                      // Close sidebar on mobile after selection
+                      if (window.innerWidth < 768) {
+                          sidebar.classList.remove('active');
+                          overlay.classList.remove('active');
+                      }
+                  });
+              });
+              updateDashboardStats();
+              
+              function updateDashboardStats() {
+                  // Dalam aplikasi nyata, data ini akan diambil dari API atau backend Flask
+                  console.log("Memperbarui statistik dashboard...");
+              }
+          });
+      // chat pakar ke user
+      const socket = io();
+      const username = "{{ username }}"; // dari backend
+      let currentPakar = null;
 
-    const chatBox = document.getElementById("chat-messages");
-    const chatWithEl = document.getElementById("chat-with");
+      const chatBox = document.getElementById("chat-messages");
+      const chatWithEl = document.getElementById("chat-with");
 
-    function appendMessage(sender, message, time = null) {
-    const msgDiv = document.createElement("div");
-    msgDiv.className = `flex mb-3 ${sender === username ? 'justify-end' : 'justify-start'}`;
+      function appendMessage(sender, message, time = null) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `flex mb-3 ${sender === username ? 'justify-end' : 'justify-start'}`;
 
-    msgDiv.innerHTML = `
-        <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === username
-        ? 'bg-blue-600 text-white rounded-br-sm'
-        : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
-        <p>${message}</p>
-        <span class="block text-xs mt-1 ${sender === username ? 'text-white/70 text-right' : 'text-gray-500'}">
-            ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-        </span>
-        </div>`;
-    chatBox.appendChild(msgDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    }
+      msgDiv.innerHTML = `
+          <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === username
+          ? 'bg-blue-600 text-white rounded-br-sm'
+          : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
+          <p>${message}</p>
+          <span class="block text-xs mt-1 ${sender === username ? 'text-white/70 text-right' : 'text-gray-500'}">
+              ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+          </span>
+          </div>`;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      }
 
-    function sendMessage() {
-    const msgInput = document.getElementById("msg");
-    const message = msgInput.value.trim();
-    if (message && currentPakar) {
-        socket.emit("user_message", { username, receiver: currentPakar, message });
-        appendMessage(username, message);
-        msgInput.value = "";
-    }
-    }
+      function sendMessage() {
+      const msgInput = document.getElementById("msg");
+      const message = msgInput.value.trim();
+      if (message && currentPakar) {
+          socket.emit("user_message", { username, receiver: currentPakar, message });
+          appendMessage(username, message);
+          msgInput.value = "";
+      }
+      }
 
-    function loadHistory(pakarNama) {
-    chatBox.innerHTML = `<div class="text-gray-500 text-sm">Memuat riwayat chat...</div>`;
+      function loadHistory(pakarNama) {
+      chatBox.innerHTML = `<div class="text-gray-500 text-sm">Memuat riwayat chat...</div>`;
 
-    fetch(`/chat_history?pakar=${encodeURIComponent(pakarNama)}&user=${encodeURIComponent(username)}`)
-        .then(res => res.json())
-        .then(data => {
-        chatBox.innerHTML = "";
-        if (data.length === 0) {
-            chatBox.innerHTML = `<div class="text-gray-500 text-sm">Belum ada percakapan dengan ${pakarNama}</div>`;
-        } else {
-            data.forEach(msg => {
-            appendMessage(msg.sender, msg.message, msg.created_at);
-            });
-        }
-        chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    }
+      fetch(`/chat_history?pakar=${encodeURIComponent(pakarNama)}&user=${encodeURIComponent(username)}`)
+          .then(res => res.json())
+          .then(data => {
+          chatBox.innerHTML = "";
+          if (data.length === 0) {
+              chatBox.innerHTML = `<div class="text-gray-500 text-sm">Belum ada percakapan dengan ${pakarNama}</div>`;
+          } else {
+              data.forEach(msg => {
+              appendMessage(msg.sender, msg.message, msg.created_at);
+              });
+          }
+          chatBox.scrollTop = chatBox.scrollHeight;
+          });
+      }
 
-    // Load daftar pakar
-    fetch("/user_list")
-    .then(res => res.json())
-    .then(data => {
-        const list = document.getElementById("pakar-list");
-        const avtar = document.getElementById("pakar_akun");
-        data.forEach(pakar => {
-        const item = document.createElement("div");
-        item.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
-        avtar.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
+      // Load daftar pakar
+      fetch("/user_list")
+      .then(res => res.json())
+      .then(data => {
+          const list = document.getElementById("pakar-list");
+          data.forEach(pakar => {
+          const item = document.createElement("div");
+          item.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
 
-        const initials = pakar.nama.split(" ").slice(0, 2).map(n => n[0]).join("").toUpperCase();
-        const colors = ["bg-red-500", "bg-green-500", "bg-blue-500", "bg-purple-500", "bg-yellow-500"];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          const initials = pakar.nama.split(" ").slice(0, 2).map(n => n[0]).join("").toUpperCase();
+          const colors = ["bg-red-500", "bg-green-500", "bg-blue-500", "bg-purple-500", "bg-yellow-500"];
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-        item.innerHTML = `
-            <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
-            ${initials}
-            </div>
-            <div>
-            <div class="font-semibold pakar-nama">${pakar.nama}</div>
-            <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
-            </div>`;
-        avtar.innerHTML = `
-            <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
-            ${initials}
-            </div>
-            <div>
-            <div class="font-semibold pakar-nama">${pakar.nama}</div>
-            <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
-            </div>`;
+          item.innerHTML = `
+              <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
+              ${initials}
+              </div>
+              <div>
+              <div class="font-semibold pakar-nama">${pakar.nama}</div>
+              <div class="text-sm text-gray-500">${pakar.email|| ''}</div>
+              </div>`;
 
-        item.addEventListener("click", () => {
-            // reset highlight
-            document.querySelectorAll("#pakar-list .p-4").forEach(el => {
-            el.classList.remove("bg-green-100");
-            el.querySelector(".pakar-nama").classList.remove("text-green-600");
-            });
+          item.addEventListener("click", () => {
+              // reset highlight
+              document.querySelectorAll("#pakar-list .p-4").forEach(el => {
+              el.classList.remove("bg-green-100");
+              el.querySelector(".pakar-nama").classList.remove("text-green-600");
+              });
 
-            // tandai pakar terpilih
-            item.classList.add("bg-green-100");
-            item.querySelector(".pakar-nama").classList.add("text-green-600");
+              // tandai pakar terpilih
+              item.classList.add("bg-green-100");
+              item.querySelector(".pakar-nama").classList.add("text-green-600");
 
-            // ganti target chat
-            currentPakar = pakar.nama;
-            chatWithEl.textContent = pakar.nama;
+              // ganti target chat
+              currentPakar = pakar.nama;
+              chatWithEl.textContent = pakar.nama;
 
-            // load riwayat chat
-            loadHistory(pakar.nama);
-        });
+              // load riwayat chat
+              loadHistory(pakar.nama);
+          });
 
-        list.appendChild(item);
-        });
-    });
+          list.appendChild(item);
+          });
+      });
 
-    socket.on("user_receive", data => {
-    appendMessage(data.sender, data.message, data.time || null);
-    });
+      socket.on("user_receive", data => {
+      appendMessage(data.sender, data.message, data.time || null);
+      });
 
-    window.onload = () => {
-    socket.emit("join", { username });
-    };
+      window.onload = () => {
+      socket.emit("join", { username });
+      };
+
+
     async function loadChart() {
       try {
         const res = await fetch("/chat_stats");
