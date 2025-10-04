@@ -1,497 +1,81 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Pengguna</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: var(--dark);
-        }
-        
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            height: 100vh;
-            position: fixed;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .main-content {
-            margin-left: 250px;
-            transition: all 0.3s ease;
-            min-height: 100vh;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav-item {
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-        }
-        
-        .active {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-        }
-        
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
-        
-        .stat-card {
-            border-left: 4px solid var(--primary);
-        }
-        
-        .consultation-card {
-            border-top: 3px solid var(--accent);
-        }
-        
-        .progress-bar {
-            background-color: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .progress-value {
-            height: 8px;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-        }
-        
-        .chat-container {
-            height: 400px;
-            overflow-y: auto;
-        }
-        
-        .chat-message {
-            max-width: 80%;
-            padding: 12px;
-            border-radius: 18px;
-            margin-bottom: 10px;
-        }
-        
-        .user-message {
-            background-color: var(--primary);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .expert-message {
-            background-color: #e9ecef;
-            color: var(--dark);
-            margin-right: auto;
-            border-bottom-left-radius: 4px;
-        }
-        
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 80px;
-                transform: translateX(0);
-            }
-            
-            .sidebar .menu-text {
-                display: none;
-            }
-            
-            .sidebar .logo-text {
-                display: none;
-            }
-            
-            .main-content {
-                margin-left: 80px;
-            }
-            
-            .nav-item {
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 250px;
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .hamburger {
-                display: block;
-            }
-            
-            .sidebar .menu-text {
-                display: inline-block;
-            }
-            
-            .overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 999;
-            }
-            
-            .overlay.active {
-                display: block;
-            }
-        }
-        
-        /* Halaman tersembunyi awalnya */
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistik Jumlah Chat</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f6f9;
+    }
+    .chart-container {
+      width: 80%;
+      max-width: 700px;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar text-white p-4">
-        <div class="flex items-center justify-between mb-10">
-            <div class="flex items-center">
-                <img src="../static/img/logo-babi.png" class="w-8 h-8 mr-3"></img>
-                <span class="logo-text font-bold text-xl">Pig Friends</span>
-            </div>
-        </div>
-        
-        <div class="mb-6 flex items-center">
-            <img src="https://ui-avatars.com/api/?name=User+Name&background=random" class="w-12 h-12 rounded-full mr-3" alt="Profile">
-            <div class="menu-text">
-                <p class="font-semibold">{{ username }}</p>
-                <p class="text-sm text-blue-100">{{email}}</p>
-            </div>
-        </div>
-        
-        <ul class="space-y-2">
-            <li class="nav-item py-3 px-4">
-                <a href="#" class="flex items-center menu-link" data-page="dashboard">
-                    <i class="fas fa-home mr-4 text-lg"></i>
-                    <span class="menu-text">Dashboard</span>
-                </a>
-            </li>
-            <!-- <li class="nav-item py-3 px-4">
-                <a href="#" class="flex items-center menu-link" data-page="konsultasi">
-                    <i class="fas fa-stethoscope mr-4 text-lg"></i>
-                    <span class="menu-text">Konsultasi</span>
-                </a>
-            </li> -->
-            <li class="nav-item py-3 px-4">
-                <a href="#" class="flex items-center menu-link" data-page="riwayat">
-                    <i class="fas fa-history mr-4 text-lg"></i>
-                    <span class="menu-text">Riwayat Diagnosa</span>
-                </a>
-            </li>
-            <li class="nav-item py-3 px-4">
-                <a href="#" class="flex items-center menu-link" data-page="chat">
-                    <i class="fas fa-comment-medical mr-4 text-lg"></i>
-                    <span class="menu-text">Chat dengan Pakar</span>
-                </a>
-            </li>
-            <li class="nav-item py-3 px-4 mt-10">
-                <a href="{{ url_for('logout') }}" class="flex items-center">
-                    <i class="fas fa-sign-out-alt mr-4 text-lg"></i>
-                    <span class="menu-text">Logout</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+  <div class="chart-container">
+    <h2 style="text-align:center; margin-bottom: 20px;">📊 Jumlah Chat Berdasarkan Penerima</h2>
+    <canvas id="chatChart"></canvas>
+  </div>
 
-    <!-- Overlay for mobile -->
-    <div class="overlay"></div>
+  <script>
+    async function loadChart() {
+      try {
+        const res = await fetch("/chat_stats");
+        const data = await res.json();
 
-    <!-- Main Content -->
-    <div class="main-content p-6">
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-8">
-            <div class="flex items-center">
-                <div class="hamburger mr-4 text-2xl">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-gray-800 page-title">Dashboard</h1>
-            </div>
-            <div class="flex items-center">
-                <!-- <div class="relative mr-4">
-                    <i class="fas fa-bell text-gray-600 text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                </div>
-                <div class="relative">
-                    <i class="fas fa-envelope text-gray-600 text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                </div> -->
-                <div class="relative">
-                    <a href="/">
-                        <i class="fas fa-home text-gray-600 text-xl"></i>
-                        <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                    </a>
-                </div>
-            </div>
-        </header>
-        <!-- Dashboard Page -->
-    <!-- Chat dengan Pakar -->
-    <div id="chat" class="page">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Sidebar list pakar -->
-        <div class="card p-4 lg:col-span-1">
-        <div class="relative mb-4">
-            <input type="text" placeholder="Cari pakar..."
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-        </div>
+        const labels = Object.keys(data); // nama receiver
+        const values = Object.values(data); // jumlah chat per receiver
 
-        <!-- LIST PAKAR -->
-        <div id="pakar-list" class="space-y-3 overflow-y-auto"></div>
-        </div>
-
-        <!-- Chat area -->
-        <div class="card p-4 lg:col-span-2">
-        <!-- header chat -->
-        <div class="flex items-center border-b pb-4 mb-4">
-            <h2 id="chat-with" class="font-semibold text-lg text-gray-700">
-            Pilih pakar untuk mulai chat
-            </h2>
-        </div>
-
-        <!-- isi pesan -->
-        <div class="chat-container mb-4" id="chat-messages"
-            style="max-height: 400px; overflow-y: auto;">
-            <!-- pesan akan muncul di sini -->
-        </div>
-
-        <!-- input pesan -->
-        <div class="flex items-center border-t pt-4">
-            <input type="text" id="msg" placeholder="Ketik pesan..."
-            class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button onclick="sendMessage()"
-            class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
-            <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-        </div>
-    </div>
-    </div>
-
-    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger');
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.overlay');
-            const mainContent = document.querySelector('.main-content');
-            const menuLinks = document.querySelectorAll('.menu-link');
-            const pages = document.querySelectorAll('.page');
-            const pageTitle = document.querySelector('.page-title');
-            
-            // Menu toggle for mobile
-            hamburger.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            });
-            
-            overlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-            
-            // Page navigation
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetPage = this.getAttribute('data-page');
-                    
-                    // Update active menu item
-                    menuLinks.forEach(item => {
-                        item.parentElement.classList.remove('active');
-                    });
-                    this.parentElement.classList.add('active');
-                    
-                    // Show target page
-                    pages.forEach(page => {
-                        page.classList.remove('active');
-                    });
-                    document.getElementById(targetPage).classList.add('active');
-                    
-                    // Update page title
-                    const pageTitles = {
-                        'dashboard': 'Dashboard',
-                        'konsultasi': 'Konsultasi',
-                        'riwayat': 'Riwayat Diagnosa',
-                        'chat': 'Chat dengan Pakar'
-                    };
-                    pageTitle.textContent = pageTitles[targetPage];
-                    
-                    // Close sidebar on mobile after selection
-                    if (window.innerWidth < 768) {
-                        sidebar.classList.remove('active');
-                        overlay.classList.remove('active');
-                    }
-                });
-            });
-            updateDashboardStats();
-            
-            function updateDashboardStats() {
-                // Dalam aplikasi nyata, data ini akan diambil dari API atau backend Flask
-                console.log("Memperbarui statistik dashboard...");
+        const ctx = document.getElementById('chatChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Jumlah Pesan Masuk',
+              data: values,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+              borderRadius: 10
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Jumlah Chat' }
+              },
+              x: {
+                title: { display: true, text: 'Nama Receiver' }
+              }
             }
+          }
         });
-    const socket = io();
-    const userId = "{{ pakar_id }}";   // dari backend session
-    let currentPakarId = null;
-    let currentPakarName = null;
-
-    const chatBox = document.getElementById("chat-messages");
-    const chatWithEl = document.getElementById("chat-with");
-
-    // Tampilkan pesan di chatbox
-    function appendMessage(senderId, message, time = null) {
-    const isMine = senderId === userId;
-    const msgDiv = document.createElement("div");
-    msgDiv.className = `flex mb-3 ${isMine ? 'justify-end' : 'justify-start'}`;
-
-    msgDiv.innerHTML = `
-        <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${isMine
-        ? 'bg-blue-600 text-white rounded-br-sm'
-        : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
-        <p>${message}</p>
-        <span class="block text-xs mt-1 ${isMine ? 'text-white/70 text-right' : 'text-gray-500'}">
-            ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-        </span>
-        </div>`;
-    chatBox.appendChild(msgDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (error) {
+        console.error("Gagal memuat data grafik:", error);
+      }
     }
 
-    // Kirim pesan
-    function sendMessage() {
-    const msgInput = document.getElementById("msg");
-    const message = msgInput.value.trim();
-    if (message && currentPakarId) {
-        socket.emit("user_message", { sender_id: userId, receiver_id: currentPakarId, message });
-        appendMessage(userId, message);
-        msgInput.value = "";
-    }
-    }
-
-    // Load riwayat chat
-    function loadHistory(pakarId, pakarName) {
-    chatBox.innerHTML = `<div class="text-gray-500 text-sm">Memuat riwayat chat...</div>`;
-
-    fetch(`/chat_history?pakar_id=${encodeURIComponent(pakarId)}&user_id=${encodeURIComponent(userId)}`)
-        .then(res => res.json())
-        .then(data => {
-        chatBox.innerHTML = "";
-        if (data.length === 0) {
-            chatBox.innerHTML = `<div class="text-gray-500 text-sm">Belum ada percakapan dengan ${pakarName}</div>`;
-        } else {
-            data.forEach(msg => {
-            appendMessage(msg.sender_id, msg.message, msg.created_at);
-            });
-        }
-        chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    }
-
-    // Load daftar pakar
-    fetch("/pakar_list")
-    .then(res => res.json())
-    .then(data => {
-        const list = document.getElementById("pakar-list");
-        data.forEach(pakar => {
-        const item = document.createElement("div");
-        item.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
-
-        const initials = pakar.nama.split(" ").slice(0, 2).map(n => n[0]).join("").toUpperCase();
-        const colors = ["bg-red-500", "bg-green-500", "bg-blue-500", "bg-purple-500", "bg-yellow-500"];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-        item.innerHTML = `
-            <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
-            ${initials}
-            </div>
-            <div>
-            <div class="font-semibold pakar-nama">${pakar.nama}</div>
-            <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
-            </div>`;
-
-        item.addEventListener("click", () => {
-            // reset highlight
-            document.querySelectorAll("#pakar-list .p-4").forEach(el => {
-            el.classList.remove("bg-green-100");
-            el.querySelector(".pakar-nama").classList.remove("text-green-600");
-            });
-
-            // tandai pakar terpilih
-            item.classList.add("bg-green-100");
-            item.querySelector(".pakar-nama").classList.add("text-green-600");
-
-            // ganti target chat
-            currentPakarId = pakar.id;
-            currentPakarName = pakar.nama;
-            chatWithEl.textContent = pakar.nama;
-
-            // load riwayat chat
-            loadHistory(pakar.id, pakar.nama);
-        });
-
-        list.appendChild(item);
-        });
-    });
-
-    // Terima pesan dari server
-    socket.on("user_receive", data => {
-    appendMessage(data.sender_id, data.message, data.time || null);
-    });
-
-    // Join socket
-    window.onload = () => {
-    socket.emit("join", { user_id: userId });
-    };
-
+    loadChart();
   </script>
 </body>
 </html>

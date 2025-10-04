@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Pengguna</title>
+    <title>Dashboard Pakar</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -201,7 +201,7 @@
         </div>
         
         <div class="mb-6 flex items-center">
-            <img src="https://ui-avatars.com/api/?name=User+Name&background=random" class="w-12 h-12 rounded-full mr-3" alt="Profile">
+            <img src="https://ui-avatars.com/api/?name={{ username[:2] | upper }}&background=random&color=fff" class="w-12 h-12 rounded-full mr-3" alt="Profile">
             <div class="menu-text">
                 <p class="font-semibold">{{ username }}</p>
                 <p class="text-sm text-blue-100">{{email}}</p>
@@ -215,22 +215,10 @@
                     <span class="menu-text">Dashboard</span>
                 </a>
             </li>
-            <!-- <li class="nav-item py-3 px-4">
-                <a href="#" class="flex items-center menu-link" data-page="konsultasi">
-                    <i class="fas fa-stethoscope mr-4 text-lg"></i>
-                    <span class="menu-text">Konsultasi</span>
-                </a>
-            </li> -->
-            <li class="nav-item py-3 px-4">
-                <a href="#" class="flex items-center menu-link" data-page="riwayat">
-                    <i class="fas fa-history mr-4 text-lg"></i>
-                    <span class="menu-text">Riwayat Diagnosa</span>
-                </a>
-            </li>
             <li class="nav-item py-3 px-4">
                 <a href="#" class="flex items-center menu-link" data-page="chat">
                     <i class="fas fa-comment-medical mr-4 text-lg"></i>
-                    <span class="menu-text">Chat dengan Pakar</span>
+                    <span class="menu-text">Chat Pengguna</span>
                 </a>
             </li>
             <li class="nav-item py-3 px-4 mt-10">
@@ -241,7 +229,6 @@
             </li>
         </ul>
     </div>
-
     <!-- Overlay for mobile -->
     <div class="overlay"></div>
 
@@ -255,15 +242,7 @@
                 </div>
                 <h1 class="text-2xl font-bold text-gray-800 page-title">Dashboard</h1>
             </div>
-            <div class="flex items-center">
-                <!-- <div class="relative mr-4">
-                    <i class="fas fa-bell text-gray-600 text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                </div>
-                <div class="relative">
-                    <i class="fas fa-envelope text-gray-600 text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                </div> -->
+             <div class="flex items-center">
                 <div class="relative">
                     <a href="/">
                         <i class="fas fa-home text-gray-600 text-xl"></i>
@@ -272,14 +251,64 @@
                 </div>
             </div>
         </header>
-        <!-- Dashboard Page -->
+     <!-- Dashboard Page -->
+      <div id="dashboard" class="page">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="card stat-card p-10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500">Total Chat</p>
+                            <h2 class="text-3xl font-bold mt-2">{{total_chat}}</h2>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-stethoscope text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card stat-card p-10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500">Total Pengguna Chat</p>
+                            <h2 class="text-3xl font-bold mt-2">{{total_users}}</h2>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card stat-card p-10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500">Total Chat dengan Pengguna</p>
+                            <h2 class="text-3xl font-bold mt-2">{{total_chat}}</h2>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-comments text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"></div>
+          <!-- Statistik -->
+          <div class="card p-6 shadow-lg rounded-2xl">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">Statistik Aktivitas</h2>
+            <canvas id="chatChart" style="max-height: 300px;"></canvas>
+          </div>
+          <div class="chart-container">
+            <h2 style="text-align:center; margin-bottom: 20px;">📊 Jumlah Chat Berdasarkan Penerima</h2>
+            <canvas id="chatChart"></canvas>
+          </div>
+      </div>
+
     <!-- Chat dengan Pakar -->
     <div id="chat" class="page">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Sidebar list pakar -->
         <div class="card p-4 lg:col-span-1">
         <div class="relative mb-4">
-            <input type="text" placeholder="Cari pakar..."
+            <input type="text" placeholder="Cari Pengguna..."
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
         </div>
@@ -293,7 +322,7 @@
         <!-- header chat -->
         <div class="flex items-center border-b pb-4 mb-4">
             <h2 id="chat-with" class="font-semibold text-lg text-gray-700">
-            Pilih pakar untuk mulai chat
+            Pilih Pengguna untuk mulai chat
             </h2>
         </div>
 
@@ -317,6 +346,7 @@
     </div>
 
     <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const hamburger = document.querySelector('.hamburger');
@@ -326,7 +356,10 @@
             const menuLinks = document.querySelectorAll('.menu-link');
             const pages = document.querySelectorAll('.page');
             const pageTitle = document.querySelector('.page-title');
-            
+            const dashboardPage = document.getElementById("dashboard");
+            //   if (dashboardPage) {
+            //       dashboardPage.style.display = "block";
+            // }
             // Menu toggle for mobile
             hamburger.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
@@ -358,12 +391,10 @@
                     
                     // Update page title
                     const pageTitles = {
-                        'dashboard': 'Dashboard',
-                        'konsultasi': 'Konsultasi',
-                        'riwayat': 'Riwayat Diagnosa',
-                        'chat': 'Chat dengan Pakar'
+                        'dashboard': 'Dashboard Pakar',
+                        'chat': 'Chat dengan Pengguna'
                     };
-                    pageTitle.textContent = pageTitles[targetPage];
+                    pageTitle.textContent = pageTitles[targetPage] || "Dashboard";
                     
                     // Close sidebar on mobile after selection
                     if (window.innerWidth < 768) {
@@ -373,7 +404,6 @@
                 });
             });
             updateDashboardStats();
-            
             function updateDashboardStats() {
                 // Dalam aplikasi nyata, data ini akan diambil dari API atau backend Flask
                 console.log("Memperbarui statistik dashboard...");
@@ -437,15 +467,25 @@
     .then(res => res.json())
     .then(data => {
         const list = document.getElementById("pakar-list");
+        const avtar = document.getElementById("pakar_akun");
         data.forEach(pakar => {
         const item = document.createElement("div");
         item.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
+        avtar.className = "p-4 border-b hover:bg-gray-100 cursor-pointer flex items-center gap-3";
 
         const initials = pakar.nama.split(" ").slice(0, 2).map(n => n[0]).join("").toUpperCase();
         const colors = ["bg-red-500", "bg-green-500", "bg-blue-500", "bg-purple-500", "bg-yellow-500"];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
         item.innerHTML = `
+            <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
+            ${initials}
+            </div>
+            <div>
+            <div class="font-semibold pakar-nama">${pakar.nama}</div>
+            <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
+            </div>`;
+        avtar.innerHTML = `
             <div class="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${randomColor}">
             ${initials}
             </div>
@@ -484,6 +524,51 @@
     window.onload = () => {
     socket.emit("join", { username });
     };
+    async function loadChart() {
+      try {
+        const res = await fetch("/chat_stats");
+        const data = await res.json();
+
+        const labels = Object.keys(data); // nama receiver
+        const values = Object.values(data); // jumlah chat per receiver
+
+        const ctx = document.getElementById('chatChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Jumlah Pesan Masuk',
+              data: values,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+              borderRadius: 10
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Jumlah Chat' }
+              },
+              x: {
+                title: { display: true, text: 'Nama Receiver' }
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Gagal memuat data grafik:", error);
+      }
+    }
+
+    loadChart();
   </script>
 </body>
 </html>

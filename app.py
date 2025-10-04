@@ -1411,11 +1411,24 @@ def lc_user():
     if 'user' not in session:
         flash('Silakan login terlebih dahulu untuk mengakses fitur ini.', 'login_required')
         return redirect(url_for('not_login'))
-    return render_template("lc_user.html",username=session['nama'])
+    return render_template("lc_user.html",
+                           username=session['nama'])
 
 @app.route('/lc_pakar')
 def lc_pakar():
-    return render_template("lc_pakar.html",username=session["pakar_nama"])
+    chat = supabase.table("chat_messages").select("id, sender, receiver").execute()
+    data = chat.data
+    # Hitung total chat
+    total_chat = len(data)
+    # total user
+    senders = set([c['sender'] for c in data if c.get('sender')])
+    receivers = set([c['receiver'] for c in data if c.get('receiver')])
+    total_users = len(senders.union(receivers))
+    return render_template("lc_pakar.html",
+                           total_chat =total_chat,
+                           total_users= total_users,
+                           email = session['pakar_email'],
+                           username=session["pakar_nama"])
 
 @socketio.on('join')
 def on_join(data):
@@ -1515,6 +1528,57 @@ def user_list():
     pakars = response.data
     return jsonify(pakars)
 
+@app.route("/chat_stats")
+def chat_stats():
+    response = supabase.table("chat_messages").select("receiver").execute()
+    data = response.data
+
+    # Hitung jumlah chat per receiver
+    counts = {}
+    for d in data:
+        receiver = d["receiver"]
+        counts[receiver] = counts.get(receiver, 0) + 1
+
+    return jsonify(counts)
+
+
+@app.route('/dashboard_stats')
+def dashboard_stats():
+    try:
+        # Ambil semua chat
+        chat = supabase.table("chat_messages").select("id, sender, receiver").execute()
+        data = chat.data
+
+        # Hitung total chat
+        total_chat = len(data)
+
+        # Hitung total user unik
+        senders = set([c['sender'] for c in data if c.get('sender')])
+        receivers = set([c['receiver'] for c in data if c.get('receiver')])
+        total_users = len(senders.union(receivers))
+
+        # Hitung total pakar (contoh: yang punya nama "admin")
+        total_pakar = len([u for u in receivers if u.lower() == "admin"])
+
+        # Hitung jumlah chat per receiver
+        chat_by_receiver = {}
+        for c in data:
+            r = c.get("receiver")
+            if r:
+                chat_by_receiver[r] = chat_by_receiver.get(r, 0) + 1
+
+        # Ubah ke format list untuk frontend
+        chat_receiver_stats = [{"receiver": r, "jumlah": j} for r, j in chat_by_receiver.items()]
+
+        return jsonify({
+            "total_users": total_users,
+            "total_pakar": total_pakar,
+            "total_chat": total_chat,
+            "chat_receiver_stats": chat_receiver_stats
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
 @app.route("/riwayat_user")
 def riwayat_user():
     if 'id_user' not in session:
