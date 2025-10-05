@@ -1009,7 +1009,14 @@ def admin():
     return render_template('admin.html', users=users,
                            nama_admin=session.get('nama_admin'),
                            foto_admin=session.get('foto_admin'))
-
+@app.route('/akun_pakar', methods=['GET'])
+def akun_pakar():
+    users = get_all_users()
+    pakar_list = supabase.table("pakar").select("*").execute().data
+    return render_template('akun_pakar.html', users=users,
+                           pakar_list=pakar_list,
+                           nama_admin=session.get('nama_admin'),
+                           foto_admin=session.get('foto_admin'))
 @app.route('/admin_add', methods=['POST'])
 def admin_add():
     if 'user' not in session:
@@ -1059,6 +1066,8 @@ def admin_add():
         flash('Gagal menambahkan akun: ' + str(e), 'admin_danger')
 
     return redirect(url_for('admin'))
+
+
 
 @app.route('/edit_user', methods=['POST'])
 def edit_user():
@@ -1192,6 +1201,50 @@ def akun_admin():
                                 nama_admin=session.get('nama_admin'),
                                 foto_admin=session.get('foto_admin'),
                                 users=users)
+
+@app.route('/pakar_add', methods=['POST','GET'])
+def pakar_add():
+    nama = request.form['nama']
+    email = request.form['email']
+    password = request.form['password']
+    # Cek apakah email atau nama sudah ada
+    existing = supabase.table("pakar").select("*").or_(f"email.eq.{email},nama.eq.{nama}").execute()
+    if existing.data:
+        flash("Email atau nama sudah digunakan.", "admin_danger")
+        return redirect(url_for("akun_pakar"))
+    try:
+        user = supabase.auth.sign_up({"email": email, "password": password})
+        uid = user.user.id
+
+        data_pakar= {
+            "id": uid,
+            "nama": nama,
+            "email": email,
+            "password": password,
+
+        }
+        supabase.table("pakar").insert(data_pakar).execute()
+        flash('Akun berhasil ditambahkan!', 'admin_success')
+    except Exception as e:
+        flash('Gagal menambahkan akun: ' + str(e), 'admin_danger')
+
+    return redirect(url_for('akun_pakar'))
+
+# Edit akun pakar
+@app.route('/pakar_edit/<id>', methods=['POST'])
+def pakar_edit(id):
+    nama = request.form['nama']
+    email = request.form['email']
+    supabase.table("pakar").update({"nama": nama, "email": email}).eq("id", id).execute()
+    flash('Akun berhasil diperbarui!', 'admin_success')
+    return redirect(url_for('akun_pakar'))
+
+# Hapus akun pakar
+@app.route('/pakar_delete/<id>', methods=['POST'])
+def pakar_delete(id):
+    supabase.table("pakar").delete().eq("id", id).execute()
+    flash('Akun berhasil dihapus!', 'admin_success')
+    return redirect(url_for('akun_pakar'))
 
 penyakit_list = supabase.table("penyakit").select("*").execute().data
 gejala_list = supabase.table("gejala").select("*").execute().data

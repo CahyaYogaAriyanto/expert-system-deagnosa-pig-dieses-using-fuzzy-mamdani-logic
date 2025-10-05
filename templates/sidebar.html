@@ -41,6 +41,7 @@
       <li><a href="{{ url_for('admin') }}" class="{% if request.path == '/admin' %}active{% endif %}">Tambah Akun Admin</a></li>
       <li><a href="{{ url_for('akun_admin') }}" class="{% if request.path == '/akun_admin' %}active{% endif %}">Liat Akun Admin</a></li>
       <li><a href="{{ url_for('data_gejala') }}" class="{% if request.path == '/data_gejala' %}active{% endif %}">Data Gejala</a></li>
+      <li><a href="{{ url_for('akun_pakar') }}" class="{% if request.path == '/akun_pakar' %}active{% endif %}">Tambah Akun pakar</a></li>
       <li><a href="{{ url_for('data_penyakit') }}" class="{% if request.path == '/data_penyakit' %}active{% endif %}">Data Penyakit</a></li>
       <li><a href="{{ url_for('riwayat_diagnosa') }}" class="{% if request.path == '/riwayat_diagnosa' %}active{% endif %}">Riwayat Diagnosa</a></li>
     </ul>
