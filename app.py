@@ -1207,6 +1207,8 @@ def pakar_add():
     nama = request.form['nama']
     email = request.form['email']
     password = request.form['password']
+    no_tlp = request.form['no_tlp']
+    link_maps = request.form['maps']
     # Cek apakah email atau nama sudah ada
     existing = supabase.table("pakar").select("*").or_(f"email.eq.{email},nama.eq.{nama}").execute()
     if existing.data:
@@ -1221,6 +1223,8 @@ def pakar_add():
             "nama": nama,
             "email": email,
             "password": password,
+            "no_tlp": no_tlp,
+            "maps_url": link_maps
 
         }
         supabase.table("pakar").insert(data_pakar).execute()
@@ -1686,8 +1690,13 @@ def dashboard():
 
     # Hitung total untuk persentase
     total = sum(statistik.values())
-    statistik_persen = {p: round((jumlah/total)*100, 2) for p, jumlah in statistik.items()}  
+    statistik_persen = {p: round((jumlah/total)*100, 2) for p, jumlah in statistik.items()} 
+    pakar_response = supabase.table('pakar').select('*').execute()
+    data_pakar = pakar_response.data
+    maps_url = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d65504.64557968693!2d110.40142645225669!3d-7.753270961649416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a58f6765d4a33%3A0x39d891d2e8da95a9!2sJogja%20City%20Mall!5e0!3m2!1sen!2sid!4v1760205983482!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade'
     return render_template('dashUser/ds_user.html',
+                           data_pakar = data_pakar,
+                           maps_url=maps_url,
                            statistik=statistik_persen,
                             username = username,
                             email=email_data, 

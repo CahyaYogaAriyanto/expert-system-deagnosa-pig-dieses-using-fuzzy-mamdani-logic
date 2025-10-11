@@ -118,6 +118,12 @@
             margin-right: auto;
             border-bottom-left-radius: 4px;
         }
+        iframe {
+        width: 90%;
+        height: 90%;
+        border: none;
+        border-radius: 10px;
+        }
         
         @media (max-width: 992px) {
             .sidebar {
@@ -530,45 +536,71 @@
     </div>
     <!-- Chat dengan Pakar -->
     <div id="chat" class="page">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Sidebar list pakar -->
-        <div class="card p-4 lg:col-span-1">
-        <div class="relative mb-4">
-            <input type="text" placeholder="Cari pakar..."
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Sidebar list pakar -->
+            <div class="card p-4 lg:col-span-1">
+            <div class="relative mb-4">
+                <!-- <input type="text" placeholder="Cari pakar..."
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"> -->
+                <!-- <i class="fas fa-search absolute right-3 top-3 text-gray-400">Pilih Pakar</i> -->
+            </div>
 
-        <!-- LIST PAKAR -->
-        <div id="pakar-list" class="space-y-3 overflow-y-auto"></div>
-        </div>
+            <!-- LIST PAKAR -->
+            <div id="pakar-list" class="space-y-3 overflow-y-auto"></div>
+            </div>
 
-        <!-- Chat area -->
-        <div class="card p-4 lg:col-span-2">
-        <!-- header chat -->
-        <div class="flex items-center border-b pb-4 mb-4">
-            <h2 id="chat-with" class="font-semibold text-lg text-gray-700">
-            Pilih pakar untuk mulai chat
-            </h2>
-        </div>
+            <!-- Chat area -->
+            <div class="card p-4 lg:col-span-2">
+            <!-- header chat -->
+            <div class="flex items-center border-b pb-4 mb-4">
+                <h2 id="chat-with" class="font-semibold text-lg text-gray-700">
+                Pilih pakar untuk mulai chat
+                </h2>
+            </div>
 
-        <!-- isi pesan -->
-        <div class="chat-container mb-4" id="chat-messages"
-            style="max-height: 400px; overflow-y: auto;">
-            <!-- pesan akan muncul di sini -->
-        </div>
+            <!-- isi pesan -->
+            <div class="chat-container mb-4" id="chat-messages"
+                style="max-height: 400px; overflow-y: auto;">
+                <!-- pesan akan muncul di sini -->
+            </div>
 
-        <!-- input pesan -->
-        <div class="flex items-center border-t pt-4">
-            <input type="text" id="msg" placeholder="Ketik pesan..."
-            class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button onclick="sendMessage()"
-            class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
-            <i class="fas fa-paper-plane"></i>
-            </button>
+            <!-- input pesan -->
+            <div class="flex items-center border-t pt-4">
+                <input type="text" id="msg" placeholder="Ketik pesan..."
+                class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="sendMessage()"
+                class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
+                <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            </div>
         </div>
+        <div class="flex flex-wrap justify-between gap-6 mb-8 mt-6">
+            {% for pakar in data_pakar %}
+            <div class="card stat-card p-6">
+                <div class="flex flex-col items-start">
+                    <h2 class="text-2xl font-bold mb-2">{{ pakar.nama }}</h2>
+                    <p class="text-gray-500 mb-2 flex items-center">
+                        <i class="fas fa-phone-alt text-blue-600 mr-2"></i>
+                        {{ pakar.no_tlp }}
+                    </p>
+                    <iframe
+                        src="{{ pakar.maps_url }}"
+                        width="100%"
+                        height="200"
+                        style="border:0; border-radius: 10px;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-span-4 text-center text-gray-500">
+                Tidak ada data pakar
+            </div>
+            {% endfor %}
         </div>
-    </div>
     </div>
 
     <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
