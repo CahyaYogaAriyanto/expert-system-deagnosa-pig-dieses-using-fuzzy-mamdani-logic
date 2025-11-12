@@ -2,7 +2,6 @@ from io import BytesIO
 import locale
 from flask import Flask, render_template, request,flash,session,redirect,url_for,Response,jsonify
 import requests
-from PIL import Image
 import os
 from fuzzy_logic import proses_logika_fuzzy,ambil_gejala_dari_db,buat_basis_pengetahuan
 import json
