@@ -2,7 +2,6 @@ flask
 opencv-python
 pillow
 numpy
-pyngrok
 requests
 mysql-connector-python
 supabase
@@ -10,8 +9,3 @@ flask-socketio
 eventlet 
 werkzeug
 
-# hapus dan jalankan 
-
-python -m venv env
-env\Scripts\activate
-pip install -r requirements.txt

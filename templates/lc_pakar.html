@@ -244,10 +244,10 @@
             </div>
              <div class="flex items-center">
                 <div class="relative">
-                    <a href="/">
+                    <!-- <a href="/">
                         <i class="fas fa-home text-gray-600 text-xl"></i>
                         <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </header>
@@ -357,10 +357,9 @@
             const pages = document.querySelectorAll('.page');
             const pageTitle = document.querySelector('.page-title');
             const dashboardPage = document.getElementById("dashboard");
-            //   if (dashboardPage) {
-            //       dashboardPage.style.display = "block";
-            // }
-            // Menu toggle for mobile
+            document.getElementById('dashboard').classList.add('active');
+            document.querySelector('.menu-link[data-page="dashboard"]').parentElement.classList.add('active');
+
             hamburger.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
@@ -391,7 +390,7 @@
                     
                     // Update page title
                     const pageTitles = {
-                        'dashboard': 'Dashboard Pakar',
+                        'dashboard': 'Dashboard',
                         'chat': 'Chat dengan Pengguna'
                     };
                     pageTitle.textContent = pageTitles[targetPage] || "Dashboard";
@@ -409,68 +408,7 @@
                 console.log("Memperbarui statistik dashboard...");
             }
         });
-      // chat pakar ke user
-          document.addEventListener('DOMContentLoaded', function() {
-              const hamburger = document.querySelector('.hamburger');
-              const sidebar = document.querySelector('.sidebar');
-              const overlay = document.querySelector('.overlay');
-              const mainContent = document.querySelector('.main-content');
-              const menuLinks = document.querySelectorAll('.menu-link');
-              const pages = document.querySelectorAll('.page');
-              const pageTitle = document.querySelector('.page-title');
-              
-              // Menu toggle for mobile
-              hamburger.addEventListener('click', function() {
-                  sidebar.classList.toggle('active');
-                  overlay.classList.toggle('active');
-              });
-              
-              overlay.addEventListener('click', function() {
-                  sidebar.classList.remove('active');
-                  overlay.classList.remove('active');
-              });
-              
-              // Page navigation
-              menuLinks.forEach(link => {
-                  link.addEventListener('click', function(e) {
-                      e.preventDefault();
-                      const targetPage = this.getAttribute('data-page');
-                      
-                      // Update active menu item
-                      menuLinks.forEach(item => {
-                          item.parentElement.classList.remove('active');
-                      });
-                      this.parentElement.classList.add('active');
-                      
-                      // Show target page
-                      pages.forEach(page => {
-                          page.classList.remove('active');
-                      });
-                      document.getElementById(targetPage).classList.add('active');
-                      
-                      // Update page title
-                      const pageTitles = {
-                          'dashboard': 'Dashboard',
-                          'konsultasi': 'Konsultasi',
-                          'riwayat': 'Riwayat Diagnosa',
-                          'chat': 'Chat dengan Pengguna'
-                      };
-                      pageTitle.textContent = pageTitles[targetPage];
-                      
-                      // Close sidebar on mobile after selection
-                      if (window.innerWidth < 768) {
-                          sidebar.classList.remove('active');
-                          overlay.classList.remove('active');
-                      }
-                  });
-              });
-              updateDashboardStats();
-              
-              function updateDashboardStats() {
-                  // Dalam aplikasi nyata, data ini akan diambil dari API atau backend Flask
-                  console.log("Memperbarui statistik dashboard...");
-              }
-          });
+
       // chat pakar ke user
       const socket = io();
       const username = "{{ username }}"; // dari backend

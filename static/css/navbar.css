@@ -76,11 +76,6 @@ body {
   text-decoration: none;
 }
 
-.dropdown-menu li a:hover {
-  background-color: #f2f2f2;
-}
-
-
 .navbar-menu li {
   margin: 0 20px;
 }
@@ -101,6 +96,8 @@ body {
 .navbar-menu.scrolled li a {
   color: white;
 }
+
+
 .navbar-menu.scrolled li a :hover {
   color: rgb(95, 190, 246);
 }
@@ -137,6 +134,14 @@ body {
   border-color: orange;
 }
 
+.dropdown-menu.scrolled  {
+  background-color: #3a4484; 
+}
+
+.dropdown-menu.scrolled li a :hover  {
+  background-color: #5968d8;
+  color: rgb(0, 0, 0); 
+}
 
 
 @media (max-width: 768px) {

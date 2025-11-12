@@ -300,7 +300,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-gray-500">Diagnosa Selesai</p>
-                            <h2 class="text-3xl font-bold mt-2">18</h2>
+                        <h2 class="text-3xl font-bold mt-2">{{jumlah_diagnosa}}</h2>
                         </div>
                         <div class="bg-green-100 p-3 rounded-full">
                             <i class="fas fa-check-circle text-green-600 text-xl"></i>
@@ -434,7 +434,7 @@
                                     <td class="py-3">{{ item.nama_penyakit }}</td>
                                     <!-- <td class="py-3">{{ item.skor }}</td> -->
                                     <td class="py-3">
-                                        {% if item.skor <= "60" %}
+                                        {% if item.skor >= "60" %}
                                             <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">{{ item.skor }}</span>
                                         {% else %}
                                             <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">{{ item.skor }}</span>
@@ -458,9 +458,9 @@
         <!-- Riwayat Diagnosa Page -->
        <div id="riwayat" class="page">
             <div class="flex justify-between items-center mb-8">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                <a href="/prediksi" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                     <i class="fas fa-plus mr-2"></i> Diagnosa Baru
-                </button>
+                </a>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -491,7 +491,7 @@
                 <!-- Detail Diagnosa (Tabel Riwayat + <details>) -->
                 <div class="card p-6 lg:col-span-2">
                     <h3 class="text-xl font-semibold mb-4">Riwayat Diagnosa</h3>
-                    {% if riwayat %}
+                    {% if riwayat_data %}
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
@@ -503,7 +503,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y">
-                                {% for item in riwayat %}
+                                {% for item in riwayat_data %}
                                 <tr>
                                     <td class="py-2">{{ item.tanggal }}</td>
                                     <td class="py-2">{{ item.nama_penyakit }}</td>
@@ -666,123 +666,6 @@
                 console.log("Memperbarui statistik dashboard...");
             }
         });
-//     // chat user
-//     const socket = io();
-//     const username = "{{ username }}"; // ambil dari session Flask
-//     const chatBox = document.getElementById("chat-messages");
-
-//     function appendMessage(sender, message, time = null) {
-//         const msgDiv = document.createElement("div");
-//         msgDiv.className = `flex mb-3 ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
-
-//         msgDiv.innerHTML = `
-//             <div class="inline-block max-w-xs mx-4 px-4 py-2 rounded-2xl ${sender === 'user'
-//                 ? 'bg-blue-600 text-white rounded-br-sm'
-//                 : 'bg-gray-200 text-gray-800 rounded-bl-sm'}">
-//                 <p>${message}</p>
-//                 <span class="block text-xs mt-1 ${sender === 'user' ? 'text-white/70 text-right' : 'text-gray-500'}">
-//                     ${time || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-//                 </span>
-//             </div>
-//         `;
-
-//         chatBox.appendChild(msgDiv);
-//         chatBox.scrollTop = chatBox.scrollHeight;
-//     }
-
-//     function sendMessage() {
-//         const msgInput = document.getElementById("msg");
-//         const message = msgInput.value.trim();
-//         if (message && username) {
-//         socket.emit("user_message", { username, message });
-//         appendMessage("user", message);
-//         msgInput.value = "";
-//         }
-//     }
-
-//     function loadChatHistory() {
-//         fetch("/chat_data")
-//         .then(res => res.json())
-//         .then(data => {
-//             const riwayat = data.filter(row =>
-//             (row.sender === username && row.receiver === 'admin') ||
-//             (row.sender === 'admin' && row.receiver === username)
-//             );
-//             riwayat.forEach(row => {
-//             appendMessage(row.sender === username ? 'user' : 'expert', row.message, row.created_at);
-//             });
-//         });
-//     }
-
-//     window.addEventListener("load", () => {
-//         if (username) {
-//         socket.emit("join", { username });
-//         loadChatHistory();
-//         }
-//     });
-
-//     socket.on("user_receive", data => {
-//         appendMessage("expert", data.message);
-//     });
-
-//     let currentPakar = null;
-//     socket.emit("join", { username });
-
-//     // Ambil daftar pakar
-//    fetch("/pakar_list")
-//     .then(res => res.json())
-//     .then(data => {
-//         const list = document.getElementById("pakar-list");
-
-//         // Fungsi buat warna random tapi konsisten per nama
-//         function getColorFromName(name) {
-//         const colors = [
-//             "bg-blue-500", "bg-green-500", "bg-red-500", "bg-yellow-500",
-//             "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500"
-//         ];
-//         let hash = 0;
-//         for (let i = 0; i < name.length; i++) {
-//             hash = name.charCodeAt(i) + ((hash << 5) - hash);
-//         }
-//         return colors[Math.abs(hash) % colors.length];
-//         }
-
-//         data.forEach(pakar => {
-//         // Ambil 2 inisial dari nama
-//         const namaSplit = pakar.nama.trim().split(" ");
-//         let initials = "";
-//         if (namaSplit.length > 1) {
-//             initials = namaSplit[0][0] + namaSplit[1][0];
-//         } else {
-//             initials = pakar.nama.substring(0, 2);
-//         }
-//         initials = initials.toUpperCase();
-
-//         // Pilih warna random tapi konsisten
-//         const colorClass = getColorFromName(pakar.nama);
-
-//         // Buat item list
-//         const item = document.createElement("div");
-//         item.className = "flex items-center gap-3 p-4 border-b hover:bg-gray-100 cursor-pointer";
-//         item.innerHTML = `
-//             <div class="w-10 h-10 flex items-center justify-center rounded-full ${colorClass} text-white font-semibold">
-//             ${initials}
-//             </div>
-//             <div>
-//             <div class="font-semibold">${pakar.nama}</div>
-//             <div class="text-sm text-gray-500">${pakar.spesialisasi || ''}</div>
-//             </div>
-//         `;
-
-//         item.addEventListener("click", () => {
-//             currentPakar = pakar.nama;
-//             chatWithEl.textContent = pakar.nama;
-//             loadHistory(pakar.nama);
-//         });
-
-//         list.appendChild(item);
-//         });
-//     });
 
     // chat user
     const socket = io();
